@@ -21,24 +21,6 @@ export const register = createAsyncThunk('auth/register', async ({ username, ema
   }
 });
 
-export const fetchMe = createAsyncThunk('auth/fetchMe', async (_, { rejectWithValue }) => {
-  try {
-    const response = await api.get('/auth/me');
-    return response.data;
-  } catch (err) {
-    return rejectWithValue(err?.response?.data || { message: 'Fetch user failed' });
-  }
-});
-
-export const updateProfile = createAsyncThunk('auth/updateProfile', async (payload, { rejectWithValue }) => {
-  try {
-    const response = await api.put('/users/profile', payload);
-    return response.data;
-  } catch (err) {
-    return rejectWithValue(err?.response?.data || { message: 'Update profile failed' });
-  }
-});
-
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -86,23 +68,6 @@ const authSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload?.message || 'Register failed';
       })
-      .addCase(fetchMe.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
-      .addCase(fetchMe.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.user = action.payload;
-        localStorage.setItem('user', JSON.stringify(action.payload));
-      })
-      .addCase(fetchMe.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload?.message || 'User not authenticated';
-      })
-      .addCase(updateProfile.fulfilled, (state, action) => {
-        state.user = action.payload;
-        localStorage.setItem('user', JSON.stringify(action.payload));
-      });
   },
 });
 

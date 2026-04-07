@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchMe, updateProfile } from '../store/slices/authSlice';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { getMe, updateProfile } from '../store/slices/userSlice';
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -13,7 +13,7 @@ export default function Profile() {
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchMe());
+    dispatch(getMe());
   }, [dispatch]);
 
 

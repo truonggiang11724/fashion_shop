@@ -8,6 +8,7 @@ import productAdminReducer from './slices/productAdminSlice';
 import orderAdminReducer from './slices/orderAdminSlice';
 import userAdminReducer from './slices/userAdminSlice';
 import dashboardReducer from './slices/dashboardSlice';
+import userReducer from './slices/userSlice';
 
 export const store = configureStore({
   reducer: {
@@ -20,5 +21,6 @@ export const store = configureStore({
     orderAdmin: orderAdminReducer,
     userAdmin: userAdminReducer,
     dashboard: dashboardReducer,
+    user: userReducer
   },
 });

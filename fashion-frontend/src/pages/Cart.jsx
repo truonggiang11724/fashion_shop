@@ -15,7 +15,7 @@ export default function Cart() {
 
 
   useEffect(() => {
-    dispatch(getCart(user.user_id));
+    if (user) dispatch(getCart(user.user_id));
   }, [dispatch, user?.user_id]);
 
   const updateQuantity = async (cart_item_id, quantity) => {
@@ -23,12 +23,20 @@ export default function Cart() {
   };
 
   const removeCartItem = async (cart_item_id) => {
-    await dispatch(removeCartItemAction(cart_item_id));
+    dispatch(removeCartItemAction(cart_item_id));
     dispatch(getCart(user.user_id));
   };
 
   const total = useMemo(() => user_cart?.cart_items?.reduce((sum, item) => sum + (item.quantity || 0) * Number(item.product_variants.price || 0), 0), [user_cart.cart_items]);
-
+  
+  if (!user) return (
+    <main className="max-w-5xl mx-auto p-4 mt-6">
+      <div className="text-center py-16 bg-white border rounded">Bạn cần đăng nhập để tiếp tục mua hàng!</div>
+      <div className="mt-4 text-center">
+        <button onClick={() => navigate('/login')} className="text-orange-500 underline">Đăng nhập</button>
+      </div>
+    </main>
+  );
   if (status === 'loading' || status === 'idle') return <LoadingSpinner message="Loading cart..." />;
   if (status === 'failed') return <p className="text-red-600 text-center">{error}</p>;
 
@@ -42,7 +50,7 @@ export default function Cart() {
         </div>
       </main>
     );
-  }    
+  }
 
   return (
     <main className="max-w-6xl mx-auto p-4 mt-4">
@@ -50,11 +58,11 @@ export default function Cart() {
       <div className="mt-4 grid grid-cols-1 lg:grid-cols-7 gap-4">
         <div className="lg:col-span-5 bg-white border rounded-lg p-4 space-y-3">
           {user_cart?.cart_items?.map((item, index) => (
-            <CartItem 
+            <CartItem
               key={index}
               item={item}
-              onUpdate= {updateQuantity}
-              onRemove= {removeCartItem}
+              onUpdate={updateQuantity}
+              onRemove={removeCartItem}
             />
           ))}
 

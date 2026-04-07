@@ -38,16 +38,4 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
-  @Get('me')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get current authenticated user info' })
-  @ApiResponse({
-    status: 200,
-    description: 'Returns the currently authenticated user',
-  })
-  async getCurrentUser(@Request() req) {
-    const user = await this.userService.findById(req.user.user_id);
-    return user;
-  }
 }

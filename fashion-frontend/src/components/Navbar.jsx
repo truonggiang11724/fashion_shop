@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
 
 export default function Navbar() {
-  const user = useSelector((state) => state.auth.user);
-  const cartCount = useSelector((state) => state.cart.items?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0);
+  const user = JSON.parse(localStorage.getItem('user')); ;
+  const cartCount = useSelector((state) => state.cart.user_cart.cart_items?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

@@ -19,7 +19,7 @@ export default function Products() {
   useEffect(() => {
     dispatch(fetchProducts());
     dispatch(fetchCategories());
-    dispatch(getCart(user.user_id));    
+    if (user) dispatch(getCart(user.user_id));    
   }, [dispatch]);
 
   const filtered = useMemo(() => {

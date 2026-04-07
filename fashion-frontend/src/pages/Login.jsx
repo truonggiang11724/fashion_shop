@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { login, fetchMe } from '../store/slices/authSlice';
+import { login } from '../store/slices/authSlice';
+import { getMe } from '../store/slices/userSlice';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -16,7 +17,7 @@ export default function Login() {
 
   useEffect(() => {
     if (token && status === 'succeeded') {
-      dispatch(fetchMe());
+      dispatch(getMe());
       navigate(from, { replace: true });
     }
   }, [token, status, navigate, from, dispatch]);
@@ -29,7 +30,7 @@ export default function Login() {
       const result = await dispatch(login({ email, password })).unwrap();
       const tokenResult = result.access_token || result.token;
       localStorage.setItem('token', tokenResult);
-      dispatch(fetchMe());
+      dispatch(getMe());
       setLoading(false);
       navigate(from, { replace: true });
     } catch (err) {
