@@ -85,6 +85,8 @@ export default function Checkout() {
       }
       try {
         const response = await addressService.getWardsByProvince(selectedProvinceId);
+        console.log(response);
+        
         setWards(response.data);
       } catch (err) {
         console.error('Failed to fetch wards:', err);
@@ -235,7 +237,7 @@ export default function Checkout() {
         <div className="grid gap-4 md:grid-cols-2">
           <div>
             <label className="block text-sm font-medium text-gray-700">Họ tên đầy đủ</label>
-            <input value={selectedAddress?.receiver_name || user?.email || ''} readOnly className="mt-1 w-full border border-gray-300 rounded p-2 bg-gray-50 text-gray-700" />
+            <input value={selectedAddress?.receiver_name || user?.username || ''} readOnly className="mt-1 w-full border border-gray-300 rounded p-2 bg-gray-50 text-gray-700" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Số điện thoại</label>
@@ -364,7 +366,7 @@ export default function Checkout() {
                 >
                   <option value="">Chọn tỉnh/thành phố</option>
                   {provinces.map((province) => (
-                    <option key={province.id} value={province.id}>{province.name}</option>
+                    <option key={province.province_id} value={province.province_id}>{province.name}</option>
                   ))}
                 </select>
               </div>
@@ -382,7 +384,7 @@ export default function Checkout() {
                 >
                   <option value="">Chọn phường/xã</option>
                   {wards.map((ward) => (
-                    <option key={ward.id} value={ward.id}>{ward.name}</option>
+                    <option key={ward.ward_id} value={ward.ward_id}>{ward.name}</option>
                   ))}
                 </select>
               </div>

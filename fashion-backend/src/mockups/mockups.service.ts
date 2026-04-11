@@ -96,7 +96,7 @@ export class MockupsService {
         product_id: createMockupDto.product_id,
         template_id: createMockupDto.template_id,
         design_image_url: createMockupDto.design_image_url,
-        render_config: createMockupDto.render_config || {},
+        render_config: JSON.stringify(createMockupDto.render_config),
         status: 'processing',
       },
     });

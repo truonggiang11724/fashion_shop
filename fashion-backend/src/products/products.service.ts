@@ -28,6 +28,7 @@ export class ProductsService {
       include: {
         product_variants: true,
         product_media: true,
+        reviews: true,
       },
     });
   }

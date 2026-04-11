@@ -27,6 +27,10 @@ export default function Orders() {
               <p className="font-medium text-gray-700">{order.order_status || 'Chờ xử lý'}</p>
             </div>
             <p className="text-sm text-gray-500">Tổng cộng: ${Number(order.total_amount || order.total || 0).toFixed(2)}</p>
+            <p className="text-sm text-gray-500">Ngày đặt hàng: {order.created_at.toLocaleString('vi-VN', {
+              year: 'numeric', month: '2-digit', day: '2-digit',
+              hour: '2-digit', minute: '2-digit', second: '2-digit'
+            })}</p>
           </Link>
         ))}
       </div>

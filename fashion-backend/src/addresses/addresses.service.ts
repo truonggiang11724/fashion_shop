@@ -69,7 +69,7 @@ export class AddressesService {
     });
   }
 
-  async getWardsByProvince(provinceId: number) {
+  async getWardsByProvince(provinceId: number) {    
     return this.prisma.wards.findMany({
       where: { province_id: provinceId },
       orderBy: { name: 'asc' },
@@ -78,7 +78,7 @@ export class AddressesService {
 
   async getWardDetail(wardId: number) {
     return this.prisma.wards.findUnique({
-      where: { id: wardId },
+      where: { ward_id: wardId },
       include: { provinces: true },
     });
   }
