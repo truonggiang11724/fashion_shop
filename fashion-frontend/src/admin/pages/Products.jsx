@@ -80,8 +80,8 @@ const Products = () => {
             });
 
             const uploadData = await res.json();
-            
-            
+
+
             variantImage = uploadData.url;
           }
 
@@ -94,7 +94,7 @@ const Products = () => {
             image_url: variantImage,
           };
         })
-      );      
+      );
 
       const data = {
         ...formData,
@@ -107,12 +107,11 @@ const Products = () => {
         }] : [],
         product_variants: variantsWithImages,
       };
-      console.log(variantsWithImages);
-      
+
 
       if (editingProduct) {
         await dispatch(updateProduct({ id: editingProduct.product_id, data })).unwrap();
-        
+
       } else {
         await dispatch(createProduct(data)).unwrap();
       }
@@ -199,7 +198,10 @@ const Products = () => {
     },
     { header: 'Name', key: 'name', render: (row) => `${row.product_name}` },
     { header: 'Price', key: 'price', render: (row) => `${getProductPrice(row.product_variants)}` },
-    { header: 'Description', key: 'description', render: (row) => `${row.description}` },
+    {
+      header: 'Description', key: 'description', render: (row) => `${row.description.length > 100 ? row.description.slice(0, 100) + '...' : row.description}`
+    },
+
     {
       header: 'Actions',
       key: 'actions',

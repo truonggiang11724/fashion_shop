@@ -3,13 +3,8 @@ import api from '../../services/api';
 
 export const fetchOrders = createAsyncThunk('orders/fetchOrders', async (_, { rejectWithValue }) => {
   try {
-    try {
-      const response = await api.get('/orders/my');
-      return response.data;
-    } catch {
-      const fallback = await api.get('/orders');
-      return fallback.data;
-    }
+    const fallback = await api.get('/orders');
+    return fallback.data;
   } catch (err) {
     return rejectWithValue(err?.response?.data || { message: 'Cannot fetch orders' });
   }
@@ -66,7 +61,7 @@ const orderSlice = createSlice({
       .addCase(fetchOrderById.pending, (state) => {
         state.detailStatus = 'loading';
       })
-      .addCase(fetchOrderById.fulfilled, (state, action) => {
+      .addCase(fetchOrderById.fulfilled, (state, action) => {        
         state.detailStatus = 'succeeded';
         state.detail = action.payload;
       })

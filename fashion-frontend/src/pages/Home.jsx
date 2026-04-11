@@ -30,18 +30,18 @@ export default function Home() {
 
   return (
     <main className="max-w-6xl mx-auto p-4">
-      <section className="rounded-xl bg-gradient-to-r from-orange-400 to-orange-600 text-white p-8 mb-6">
+      <section className="rounded-xl bg-gradient-to-r from-gray-700 to-gray-900 text-white p-8 mb-6">
         <h1 className="text-3xl md:text-5xl font-black">Fashion Store</h1>
-        <p className="mt-2 text-sm md:text-base">Find your favorite style with exclusive discounts!</p>
+        <p className="mt-2 text-sm md:text-base text-gray-200">Tìm kiếm phong cách yêu thích của bạn với các giảm giá độc quyền!</p>
       </section>
 
       <div className="mb-5 flex flex-col md:flex-row gap-3 items-start md:items-center justify-between">
         <div className="flex gap-3 items-center">
-          <label className="font-medium">Categories:</label>
+          <label className="font-medium text-gray-700">Danh mục:</label>
           <select
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
-            className="border rounded-lg p-2"
+            className="border border-gray-300 rounded-lg p-2 bg-white text-gray-700 hover:border-gray-400"
           >
             <option value="">All</option>
             {(categories || []).map((cat) => (
@@ -53,8 +53,8 @@ export default function Home() {
         <input
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          placeholder="Search products..."
-          className="border rounded-lg p-2 w-full md:w-72"
+          placeholder="Tìm kiếm sản phẩm..."
+          className="border border-gray-300 rounded-lg p-2 w-full md:w-72 bg-white text-gray-700 focus:border-gray-500 focus:outline-none"
         />
       </div>
 

@@ -46,10 +46,14 @@ export class CartService {
     if (!customer_id) return;
     const cart = await this.findByCustomerId(customer_id);
 
-    cart?.cart_items.map((item: any) => {
-      if (item.variant_id == variant_id) 
-      return this.updateQuantity({ cart_item_id: item.cart_item_id, quantity: item.quantity + 1 });
-    })
+    for (const item of cart?.cart_items || []) {
+      if (item.variant_id == variant_id) {
+        return this.updateQuantity({
+          cart_item_id: item.cart_item_id,
+          quantity: item.quantity ? item.quantity + 1 : 1,
+        });
+      }
+    }
 
     return this.prisma.$transaction(async (prisma) => {
       return prisma.cart_items.create({
@@ -58,6 +62,7 @@ export class CartService {
           variant_id: variant_id,
           quantity: 1,
         },
+        include: {product_variants: {include: {products: true}},}
       });
     });
   }
@@ -86,6 +91,13 @@ export class CartService {
 
     return this.prisma.$transaction(async (prisma) => {
       return prisma.cart_items.delete({ where: { cart_item_id: cart_item_id } });
+    });
+  }
+
+  async removeAllItem(cartId: number) {
+
+    return this.prisma.$transaction(async (prisma) => {
+      return prisma.cart_items.deleteMany({ where: { cart_id: cartId } });
     });
   }
 

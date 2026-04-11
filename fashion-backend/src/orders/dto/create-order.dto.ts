@@ -20,15 +20,6 @@ export class CreateOrderDto {
   @IsNumber()
   customer_id?: number;
 
-  @ApiPropertyOptional({
-    example: 2,
-    description: 'Seller providing the product(s)',
-  })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  seller_id?: number;
-
   @ApiPropertyOptional({ example: 3, description: 'Shipping address ID' })
   @IsOptional()
   @Type(() => Number)

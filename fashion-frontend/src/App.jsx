@@ -27,6 +27,7 @@ import Sellers from './admin/pages/Sellers';
 import Reviews from './admin/pages/Reviews';
 import Promotions from './admin/pages/Promotions';
 import Wallets from './admin/pages/Wallets';
+import MockupGenerator from './pages/MockupGenerator';
 
 export default function App() {
   return (
@@ -101,6 +102,13 @@ export default function App() {
             <>
               <Navbar />
               <ProtectedRoute><OrderDetail /></ProtectedRoute>
+              <Footer />
+            </>
+          } />
+          <Route path="/mockup-generator" element={
+            <>
+              <Navbar />
+              <ProtectedRoute><MockupGenerator /></ProtectedRoute>
               <Footer />
             </>
           } />

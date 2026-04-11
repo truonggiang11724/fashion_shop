@@ -32,21 +32,21 @@ export default function Profile() {
 
   return (
     <main className="max-w-4xl mx-auto p-4 mt-6">
-      <h1 className="text-2xl font-bold mb-4">Profile</h1>
-      <div className="bg-white rounded-lg border p-4 max-w-lg">
+      <h1 className="text-3xl font-bold mb-4 text-gray-900">Hồ sơ cá nhân</h1>
+      <div className="bg-white rounded-lg border border-gray-200 p-4 max-w-lg">
         <form className="space-y-4" onSubmit={onSubmit}>
           <div>
-            <label className="block text-sm font-medium">Username</label>
-            <input value={formData.username} onChange={(e) => setFormData((prev) => ({ ...prev, username: e.target.value }))} className="w-full border rounded p-2" />
+            <label className="block text-sm font-medium text-gray-700">Tên người dùng</label>
+            <input value={formData.username} onChange={(e) => setFormData((prev) => ({ ...prev, username: e.target.value }))} className="w-full border border-gray-300 rounded p-2 text-gray-700 focus:border-gray-500 focus:outline-none" />
           </div>
           <div>
-            <label className="block text-sm font-medium">Email</label>
-            <input value={formData.email} onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))} className="w-full border rounded p-2" />
+            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <input value={formData.email} onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))} className="w-full border border-gray-300 rounded p-2 text-gray-700 focus:border-gray-500 focus:outline-none" />
           </div>
-          <button type="submit" className="w-full bg-orange-500 text-white p-2 rounded hover:bg-orange-600">Update Profile</button>
+          <button type="submit" className="w-full bg-gray-800 text-white p-2 rounded hover:bg-gray-900 font-medium transition">Cập nhật hồ sơ</button>
         </form>
-        {message && <p className="mt-3 text-sm text-gray-600">{message}</p>}
-        {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+        {message && <p className="mt-3 text-sm text-green-600 font-medium">{message}</p>}
+        {error && <p className="mt-3 text-sm text-red-600 font-medium">{error}</p>}
       </div>
     </main>
   );

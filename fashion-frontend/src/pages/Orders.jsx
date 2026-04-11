@@ -16,17 +16,17 @@ export default function Orders() {
 
   return (
     <main className="max-w-6xl mx-auto p-4 mt-6">
-      <h1 className="text-2xl font-bold mb-4">Order History</h1>
-      {error && <p className="text-red-600">{error}</p>}
-      {list.length === 0 && <p>No orders found.</p>}
+      <h1 className="text-3xl font-bold mb-4 text-gray-900">Lịch sử đơn hàng</h1>
+      {error && <p className="text-red-600 font-medium">{error}</p>}
+      {list.length === 0 && <p className="text-gray-600">Chưa có đơn hàng nào.</p>}
       <div className="grid gap-3">
         {list.map((order) => (
-          <Link key={order.order_id || order.id} to={`/orders/${order.order_id || order.id}`} className="p-4 bg-white rounded-lg border hover:shadow">
+          <Link key={order.order_id || order.id} to={`/orders/${order.order_id || order.id}`} className="p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition">
             <div className="flex justify-between">
-              <p>Order #{order.order_id || order.id}</p>
-              <p className="font-medium">{order.order_status || 'Pending'}</p>
+              <p className="text-gray-900 font-medium">Đơn hàng #{order.order_id || order.id}</p>
+              <p className="font-medium text-gray-700">{order.order_status || 'Chờ xử lý'}</p>
             </div>
-            <p className="text-sm text-gray-500">Total: ${Number(order.total_amount || order.total || 0).toFixed(2)}</p>
+            <p className="text-sm text-gray-500">Tổng cộng: ${Number(order.total_amount || order.total || 0).toFixed(2)}</p>
           </Link>
         ))}
       </div>

@@ -8,7 +8,7 @@ datasource db {
 }
 
 model cancel_requests {
-  cancel_request_id Int    @id @default(autoincrement())
+  cancel_request_id Int       @id @default(autoincrement())
   order_id          Int?
   reason            String?   @db.Text
   status            String?   @db.VarChar(50)
@@ -19,7 +19,7 @@ model cancel_requests {
 }
 
 model cart_items {
-  cart_item_id     Int            @id @default(autoincrement())
+  cart_item_id     Int               @id @default(autoincrement())
   cart_id          Int?
   variant_id       Int?
   quantity         Int?
@@ -32,7 +32,7 @@ model cart_items {
 }
 
 model carts {
-  cart_id     Int       @id @default(autoincrement())
+  cart_id     Int          @id @default(autoincrement())
   customer_id Int?
   updated_at  DateTime?    @default(now()) @db.DateTime(0)
   cart_items  cart_items[]
@@ -42,7 +42,7 @@ model carts {
 }
 
 model categories {
-  category_id Int     @id @default(autoincrement())
+  category_id Int        @id @default(autoincrement())
   name        String?    @db.VarChar(150)
   description String?    @db.Text
   thumbnail   String?    @db.Text
@@ -53,23 +53,22 @@ model categories {
 }
 
 model customer_addresses {
-  address_id     Int     @id @default(autoincrement())
+  address_id     Int        @id @default(autoincrement())
   customer_id    Int?
   receiver_name  String?    @db.VarChar(150)
   phone          String?    @db.VarChar(20)
-  province       String?    @db.VarChar(100)
-  district       String?    @db.VarChar(100)
-  ward           String?    @db.VarChar(100)
+  ward_id        Int?
   address_detail String?    @db.Text
   is_default     Boolean?
   created_at     DateTime?  @default(now()) @db.DateTime(0)
   customers      customers? @relation(fields: [customer_id], references: [customer_id], onDelete: Restrict, onUpdate: Restrict, map: "customer_addresses_ibfk_1")
+  orders         orders[]
 
   @@index([customer_id], map: "customer_id")
 }
 
 model customers {
-  customer_id        Int               @id
+  customer_id        Int                  @id
   loyalty_point      Int?                 @default(0)
   level              Int?                 @default(1)
   status             customers_status?
@@ -80,10 +79,11 @@ model customers {
   orders             orders[]
   promotion_usages   promotion_usages[]
   reviews            reviews[]
+  mockup_renders     mockup_renders[]
 }
 
 model order_items {
-  order_item_id    Int            @id @default(autoincrement())
+  order_item_id    Int               @id @default(autoincrement())
   order_id         Int?
   variant_id       Int?
   quantity         Int?
@@ -97,9 +97,8 @@ model order_items {
 }
 
 model orders {
-  order_id            Int                @id @default(autoincrement())
+  order_id            Int                   @id @default(autoincrement())
   customer_id         Int?
-  seller_id           Int?
   address_id          Int?
   order_status        String?               @db.VarChar(50)
   payment_status      String?               @db.VarChar(50)
@@ -108,8 +107,7 @@ model orders {
   cancel_requests     cancel_requests[]
   order_items         order_items[]
   customers           customers?            @relation(fields: [customer_id], references: [customer_id], onDelete: Restrict, onUpdate: Restrict, map: "orders_ibfk_1")
-  sellers             sellers?              @relation(fields: [seller_id], references: [user_id], onDelete: Restrict, onUpdate: Restrict, map: "orders_ibfk_2")
-  wards               wards?                @relation(fields: [address_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "orders_ibfk_3")
+  wards               customer_addresses?   @relation(fields: [address_id], references: [address_id], onDelete: Restrict, onUpdate: Restrict, map: "orders_ibfk_3")
   payments            payments[]
   promotion_usages    promotion_usages[]
   refunds             refunds[]
@@ -118,11 +116,10 @@ model orders {
 
   @@index([address_id], map: "address_id")
   @@index([customer_id], map: "customer_id")
-  @@index([seller_id], map: "seller_id")
 }
 
 model payments {
-  payment_id       Int    @id @default(autoincrement())
+  payment_id       Int       @id @default(autoincrement())
   order_id         Int?
   payment_method   String?   @db.VarChar(100)
   provider         String?   @db.VarChar(100)
@@ -136,7 +133,7 @@ model payments {
 }
 
 model product_media {
-  media_id   Int                    @id @default(autoincrement())
+  media_id   Int                       @id @default(autoincrement())
   product_id Int?
   media_url  String?                   @db.Text
   media_type product_media_media_type? @default(image)
@@ -147,14 +144,14 @@ model product_media {
 }
 
 model product_variants {
-  variant_id     Int        @id @default(autoincrement())
+  variant_id     Int           @id @default(autoincrement())
   product_id     Int?
   sku            String?       @unique(map: "sku") @db.VarChar(100)
   color          String?       @db.VarChar(50)
   size           String?       @db.VarChar(50)
   price          Decimal?      @db.Decimal(12, 2)
   stock_quantity Int?
-  image_url      String?       @db.VarChar(200)
+  image_url      String?       @db.Text
   cart_items     cart_items[]
   order_items    order_items[]
   products       products?     @relation(fields: [product_id], references: [product_id], onDelete: Restrict, onUpdate: Restrict, map: "product_variants_ibfk_1")
@@ -163,7 +160,7 @@ model product_variants {
 }
 
 model products {
-  product_id       Int             @id @default(autoincrement())
+  product_id       Int                @id @default(autoincrement())
   seller_id        Int?
   category_id      Int?
   product_name     String?            @db.VarChar(200)
@@ -176,13 +173,14 @@ model products {
   sellers          sellers?           @relation(fields: [seller_id], references: [user_id], onDelete: Restrict, onUpdate: Restrict, map: "products_ibfk_1")
   categories       categories?        @relation(fields: [category_id], references: [category_id], onDelete: Restrict, onUpdate: Restrict, map: "products_ibfk_2")
   reviews          reviews[]
+  mockup_renders   mockup_renders[]
 
   @@index([category_id], map: "category_id")
   @@index([seller_id], map: "seller_id")
 }
 
 model promotion_usages {
-  promotion_usage_id Int      @id @default(autoincrement())
+  promotion_usage_id Int         @id @default(autoincrement())
   promotion_id       Int?
   customer_id        Int?
   order_id           Int?
@@ -197,7 +195,7 @@ model promotion_usages {
 }
 
 model promotions {
-  promotion_id     Int                     @id @default(autoincrement())
+  promotion_id     Int                        @id @default(autoincrement())
   promotion_type   promotions_promotion_type?
   discount_value   Decimal?                   @db.Decimal(12, 2)
   min_order_value  Decimal?                   @db.Decimal(12, 2)
@@ -235,7 +233,7 @@ model review_media {
 }
 
 model reviews {
-  review_id     Int         @id @default(autoincrement())
+  review_id     Int            @id @default(autoincrement())
   customer_id   Int?
   product_id    Int?
   order_item_id Int?
@@ -254,20 +252,19 @@ model reviews {
 }
 
 model sellers {
-  user_id           Int     @id
+  user_id           Int        @id
   shop_name         String?    @db.VarChar(150)
   rating            Decimal?   @db.Decimal(2, 1)
   theme_description String?    @db.Text
   created_at        DateTime?  @default(now()) @db.DateTime(0)
   updated_at        DateTime?  @default(now()) @db.DateTime(0)
-  orders            orders[]
   products          products[]
   users             users      @relation(fields: [user_id], references: [user_id], onUpdate: Restrict, map: "sellers_ibfk_1")
   wallets           wallets[]
 }
 
 model shipments {
-  shipment_id            Int    @id @default(autoincrement())
+  shipment_id            Int       @id @default(autoincrement())
   order_id               Int?
   tracking_number        String?   @db.VarChar(150)
   carrier                String?   @db.VarChar(100)
@@ -280,7 +277,7 @@ model shipments {
 }
 
 model users {
-  user_id        Int        @id @default(autoincrement())
+  user_id        Int           @id @default(autoincrement())
   tiktok_user_id String?       @unique(map: "tiktok_user_id") @db.VarChar(100)
   username       String?       @db.VarChar(100)
   password_hash  String?       @db.VarChar(255)
@@ -297,7 +294,7 @@ model users {
 }
 
 model wallet_transactions {
-  transaction_id   Int                                @id @default(autoincrement())
+  transaction_id   Int                                   @id @default(autoincrement())
   wallet_id        Int?
   order_id         Int?
   transaction_type wallet_transactions_transaction_type?
@@ -311,7 +308,7 @@ model wallet_transactions {
 }
 
 model wallets {
-  wallet_id           Int                @id @default(autoincrement())
+  wallet_id           Int                   @id @default(autoincrement())
   seller_id           Int?
   available_balance   Decimal?              @db.Decimal(14, 2)
   pending_balance     Decimal?              @db.Decimal(14, 2)
@@ -328,10 +325,43 @@ model wards {
   id          Int       @id @default(autoincrement())
   province_id Int
   name        String    @db.VarChar(100)
-  orders      orders[]
   provinces   provinces @relation(fields: [province_id], references: [id], onUpdate: Restrict, map: "wards_ibfk_1")
 
   @@index([province_id], map: "province_id")
+}
+
+model mockup_templates {
+  template_id       Int               @id @default(autoincrement())
+  name              String            @db.VarChar(255)
+  description       String?           @db.Text
+  mockup_uuid       String            @unique @db.VarChar(100)
+  thumbnail_url     String?           @db.Text
+  category          String?           @db.VarChar(100)
+  smart_objects     Json?
+  is_active         Boolean?          @default(true)
+  created_at        DateTime?         @default(now()) @db.DateTime(0)
+  mockup_renders    mockup_renders[]
+}
+
+model mockup_renders {
+  render_id          Int               @id @default(autoincrement())
+  customer_id        Int?
+  product_id         Int?
+  template_id        Int?
+  design_image_url   String?           @db.Text
+  rendered_image_url String?           @db.Text
+  render_config      Json?
+  status             mockup_status?    @default(pending)
+  error_message      String?           @db.Text
+  created_at         DateTime?         @default(now()) @db.DateTime(0)
+  updated_at         DateTime?         @default(now()) @db.DateTime(0)
+  customers          customers?        @relation(fields: [customer_id], references: [customer_id], onDelete: Restrict, onUpdate: Restrict, map: "mockup_renders_ibfk_1")
+  products           products?         @relation(fields: [product_id], references: [product_id], onDelete: Restrict, onUpdate: Restrict, map: "mockup_renders_ibfk_2")
+  mockup_templates   mockup_templates? @relation(fields: [template_id], references: [template_id], onDelete: Restrict, onUpdate: Restrict, map: "mockup_renders_ibfk_3")
+
+  @@index([customer_id], map: "customer_id")
+  @@index([product_id], map: "product_id")
+  @@index([template_id], map: "template_id")
 }
 
 enum promotions_promotion_type {
@@ -381,4 +411,11 @@ enum users_role {
 enum users_status {
   active
   inactive
+}
+
+enum mockup_status {
+  pending
+  processing
+  completed
+  failed
 }

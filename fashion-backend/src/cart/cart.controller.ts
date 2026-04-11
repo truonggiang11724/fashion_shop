@@ -7,17 +7,20 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CartService } from './cart.service';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('Carts')
 @Controller('carts')
 export class CartController {
-  constructor(private readonly cartService: CartService) {}
+  constructor(private readonly cartService: CartService) { }
 
   @Post('add')
   @ApiOperation({ summary: 'Add an item cart' })
@@ -53,7 +56,7 @@ export class CartController {
   @Put('item/:id')
   @ApiOperation({ summary: 'Update quantity for a cart item' })
   @ApiResponse({ status: 200, description: 'Cart item quantity updated successfully' })
-  updateCartItem(@Body() updateCartItemDto: UpdateCartItemDto) {    
+  updateCartItem(@Body() updateCartItemDto: UpdateCartItemDto) {
     return this.cartService.updateQuantity(updateCartItemDto);
   }
 
@@ -64,10 +67,10 @@ export class CartController {
     return this.cartService.removeItem(id);
   }
 
-  // @Delete(':id')
-  // @ApiOperation({ summary: 'Delete a cart' })
-  // @ApiResponse({ status: 200, description: 'Cart deleted successfully' })
-  // remove(@Param('id', ParseIntPipe) id: number) {
-  //   return this.cartService.remove(id);
-  // }
+  @Delete('item')
+  @ApiOperation({ summary: 'Delete all cart items' })
+  @ApiResponse({ status: 200, description: 'All cart items deleted successfully' })
+  remove(@Body() cartId: number) {
+    return this.cartService.removeAllItem(cartId);
+  }
 }

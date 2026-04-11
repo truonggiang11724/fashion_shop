@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchProductById, clearDetail } from '../store/slices/productSlice';
-import { addToCart } from '../store/slices/cartSlice';
+import { addToCart, getCart } from '../store/slices/cartSlice';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function ProductDetail() {
@@ -43,7 +43,7 @@ export default function ProductDetail() {
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-6">
-      <button onClick={() => navigate(-1)} className="text-sm text-orange-500 underline">&larr; Back</button>
+      <button onClick={() => navigate(-1)} className="text-sm text-gray-700 hover:text-gray-900 underline">&larr; Quay lại</button>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
         <div className="space-y-3">
           {images.length ? (
@@ -58,18 +58,18 @@ export default function ProductDetail() {
           </div>
         </div>
         <section>
-          <h1 className="text-3xl font-bold">{product.product_name || product.name}</h1>
-          <p className="text-orange-500 text-2xl font-bold mt-2">${Number(price).toFixed(2)}</p>
-          <p className="text-gray-600 mt-3">{product.description || 'No description available.'}</p>
+          <h1 className="text-3xl font-bold text-gray-900">{product.product_name || product.name}</h1>
+          <p className="text-gray-800 text-2xl font-bold mt-2">${Number(price).toFixed(2)}</p>
+          <p className="text-gray-600 mt-3">{product.description || 'Không có mô tả.'}</p>
 
           <div className="mt-4 space-y-3">
             <div>
-              <h3 className="font-medium">Chọn màu/size</h3>
+              <h3 className="font-medium text-gray-900">Chọn màu/size</h3>
               <div className="flex gap-2 flex-wrap mt-2">
                 {(product.product_variants || []).map((variant) => (
                   <span 
                   key={variant.variant_id || variant.id} 
-                  className="text-sm border px-2 py-1 rounded cursor-pointer"
+                  className="text-sm border border-gray-300 px-2 py-1 rounded cursor-pointer text-gray-700 hover:bg-gray-100 transition"
                   onClick={() => setAddForm({...addForm , variant_id: variant.variant_id})} >
                     {'Màu ' + variant.color + ' - Size ' + variant.size}
                   </span>
@@ -78,15 +78,15 @@ export default function ProductDetail() {
             </div>
 
             <div className="flex items-center gap-3">
-              <span>Quantity</span>
-              <input type="number" min={1} value={qty} onChange={(e) => setQty(Number(e.target.value || 1))} className="w-20 border rounded px-2 py-1" />
+              <span className="text-gray-700">Số lượng</span>
+              <input type="number" min={1} value={qty} onChange={(e) => setQty(Number(e.target.value || 1))} className="w-20 border border-gray-300 rounded px-2 py-1 text-gray-700 focus:border-gray-500 focus:outline-none" />
             </div>
 
             <button
               onClick= {handleAddItem}
-              className="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600"
+              className="w-full bg-gray-800 text-white py-3 rounded-lg hover:bg-gray-900 font-medium transition"
             >
-              Add to Cart
+              Thêm vào giỏ
             </button>
           </div>
         </section>

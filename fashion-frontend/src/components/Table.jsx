@@ -38,7 +38,7 @@ const Table = ({ columns, data, loading, emptyMessage = 'No data available' }) =
             <>
               <tr key={rowIndex} className="hover:bg-gray-50">
                 {columns.map((column, colIndex) => (
-                  <td key={colIndex} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td key={colIndex} className="px-6 py-4 whitespace-wrap text-sm text-gray-900">
                     {column.render ? column.render(row) : row[column.key]}
                   </td>
                 ))}

@@ -11,18 +11,9 @@ export const getCart = createAsyncThunk('cart/getCart', async (id, { rejectWithV
   }
 });
 
-export const fetchCart = createAsyncThunk('cart/fetchCart', async (_, { rejectWithValue }) => {
-  try {
-    const response = await api.get('/carts');
-    return response.data;
-  } catch (err) {
-    return rejectWithValue(err?.response?.data || { message: 'Cannot fetch cart' });
-  }
-});
-
 export const addToCart = createAsyncThunk('cart/addToCart', async (item, { rejectWithValue }) => {
   try {
-    const response = await api.post('/carts/add', item);    
+    const response = await api.post('/carts/add', item);
     return response.data;
   } catch (err) {
     return rejectWithValue(err?.response?.data || { message: 'Cannot add cart item' });
@@ -49,17 +40,25 @@ export const removeCartItem = createAsyncThunk('cart/removeCartItem', async (id,
   }
 });
 
+export const removeAllCartItem = createAsyncThunk('cart/removeAllCartItem', async (cartId, { rejectWithValue }) => {
+  try {
+    const response = await api.delete(`/carts/item`, cartId);
+    return response.data;
+  } catch (err) {
+    return rejectWithValue(err?.response?.data || { message: 'Cannot remove cart item' });
+  }
+});
+
 const cartSlice = createSlice({
   name: 'cart',
   initialState: {
-    items: [],
     status: 'idle',
     error: null,
     user_cart: {},
   },
   reducers: {
     clearCart(state) {
-      state.items = [];
+      state.user_cart = {};
     },
   },
   extraReducers: (builder) => {
@@ -72,34 +71,21 @@ const cartSlice = createSlice({
         state.status = 'succeeded';
         state.user_cart = action.payload || [];
         console.log(action.payload);
-        
-      })
-      .addCase(fetchCart.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
-      .addCase(fetchCart.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.items = action.payload || [];
-      })
-      .addCase(fetchCart.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload?.message;
+
       })
       .addCase(addToCart.fulfilled, (state, action) => {
         const added = action.payload;
-        const exists = state.items.find((i) => i.id === added.id);
-        
+        const exists = state.user_cart.cart_items.find((i) => i.variant_id == added.variant_id);
         if (exists) {
-          exists.quantity = (exists.quantity || 0) + (added.quantity || 1);
+          exists.quantity = (exists.quantity || 0) + 1;
         } else {
-          state.items.push({ ...(added || {}), quantity: added.quantity || 1 });
+          state.user_cart.cart_items.push(added);
         }
       })
       .addCase(updateCart.fulfilled, (state, action) => {
         const updated = action.payload;
-        if (Array.isArray(state.items)) {
-          state.items = state.items.map((item) =>
+        if (Array.isArray(state.user_cart.cart_items)) {
+          state.user_cart.cart_items = state.user_cart.cart_items.map((item) =>
             item.cart_item_id === updated.cart_item_id ? { ...item, ...updated } : item,
           );
         }
@@ -111,8 +97,8 @@ const cartSlice = createSlice({
       })
       .addCase(removeCartItem.fulfilled, (state, action) => {
         const { id } = action.payload;
-        if (Array.isArray(state.items)) {
-          state.items = state.items.filter((item) => item.cart_item_id !== id);
+        if (Array.isArray(state.user_cart.cart_items)) {
+          state.user_cart.cart_items = state.user_cart.cart_items.filter((item) => item.cart_item_id !== id);
         }
         if (state.user_cart?.cart_items) {
           state.user_cart.cart_items = state.user_cart.cart_items.filter(

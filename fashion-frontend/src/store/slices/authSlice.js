@@ -48,6 +48,8 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
+        console.log(action.payload);
+        
         state.status = 'succeeded';
         const token = action.payload.access_token || action.payload.token;
         state.token = token;

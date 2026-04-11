@@ -19,8 +19,12 @@ export class OrdersService {
     });
   }
 
-  async findAll() {
+  async findAll(userId: number) {    
     return this.prisma.orders.findMany({
+      where: {
+        customer_id: userId
+      },
+      orderBy: { created_at : "desc" },
       include: { order_items: true },
     });
   }
@@ -28,7 +32,9 @@ export class OrdersService {
   async findOne(orderId: number) {
     return this.prisma.orders.findUnique({
       where: { order_id: orderId },
-      include: { order_items: true },
+      include: { order_items: {include: {product_variants: 
+        {include:  {products: true}}
+      }},  },
     });
   }
 

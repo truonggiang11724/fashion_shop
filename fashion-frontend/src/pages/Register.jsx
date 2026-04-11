@@ -28,27 +28,27 @@ export default function Register() {
   };
 
   return (
-    <main className="max-w-md mx-auto p-4 mt-10 bg-white rounded-lg border">
-      <h1 className="text-2xl font-bold mb-4">Register</h1>
+    <main className="max-w-md mx-auto p-4 mt-10 bg-white rounded-lg border border-gray-200">
+      <h1 className="text-3xl font-bold mb-4 text-gray-900">Đăng ký</h1>
       <form onSubmit={submit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium">Username</label>
-          <input value={username} onChange={(e) => setUsername(e.target.value)} required type="text" className="mt-1 w-full border rounded p-2" />
+          <label className="block text-sm font-medium text-gray-700">Tên đăng nhập</label>
+          <input value={username} onChange={(e) => setUsername(e.target.value)} required type="text" className="mt-1 w-full border border-gray-300 rounded p-2 bg-white text-gray-700 focus:border-gray-500 focus:outline-none" />
         </div>
         <div>
-          <label className="block text-sm font-medium">Email</label>
-          <input value={email} onChange={(e) => setEmail(e.target.value)} required type="email" className="mt-1 w-full border rounded p-2" />
+          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <input value={email} onChange={(e) => setEmail(e.target.value)} required type="email" className="mt-1 w-full border border-gray-300 rounded p-2 bg-white text-gray-700 focus:border-gray-500 focus:outline-none" />
         </div>
         <div>
-          <label className="block text-sm font-medium">Password</label>
-          <input value={password} onChange={(e) => setPassword(e.target.value)} required type="password" className="mt-1 w-full border rounded p-2" />
+          <label className="block text-sm font-medium text-gray-700">Mật khẩu</label>
+          <input value={password} onChange={(e) => setPassword(e.target.value)} required type="password" className="mt-1 w-full border border-gray-300 rounded p-2 bg-white text-gray-700 focus:border-gray-500 focus:outline-none" />
         </div>
-        <button type="submit" disabled={loading} className="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600 disabled:opacity-50">
-          {loading ? 'Registering...' : 'Register'}
+        <button type="submit" disabled={loading} className="w-full bg-gray-800 text-white py-2 rounded hover:bg-gray-900 disabled:opacity-50 font-medium">
+          {loading ? 'Đang đăng ký...' : 'Đăng ký'}
         </button>
-        {(error || authError) && <p className="text-red-600">{error || authError}</p>}
+        {(error || authError) && <p className="text-red-600 font-medium">{error || authError}</p>}
         <p className="text-sm text-gray-600">
-          Already have account? <Link to="/login" className="text-orange-500">Login</Link>
+          Đã có tài khoản? <Link to="/login" className="text-gray-700 font-medium hover:text-gray-900">Đăng nhập</Link>
         </p>
       </form>
     </main>
