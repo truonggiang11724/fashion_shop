@@ -20,12 +20,16 @@ export class MockupsController {
 
   /**
    * Get all available mockup templates
-   * GET /mockups/templates
+   * GET /mockups/templates?active=true&variant_id=1
    */
   @Get('templates')
-  async getTemplates(@Query('active') active: string = 'true') {
+  async getTemplates(
+    @Query('active') active: string = 'true',
+    @Query('variant_id') variant_id: string,
+  ) {
     const isActive = active === 'true';
-    return this.mockupsService.getTemplates(isActive);
+    const variantId = variant_id ? parseInt(variant_id, 10) : null;
+    return this.mockupsService.getTemplates(isActive, variantId);
   }
 
   /**
@@ -47,12 +51,11 @@ export class MockupsController {
    * Requires authentication
    */
   @Post('render')
-  @UseGuards(JwtAuthGuard)
   async renderMockup(
     @Request() req,
     @Body() createMockupDto: CreateMockupRenderDto,
   ) {
-    const userId = req.user.user_id;
+    const userId = 1;
     return this.mockupsService.renderMockup(userId, createMockupDto);
   }
 

@@ -59,4 +59,16 @@ export class ReviewsService {
       return prisma.reviews.delete({ where: { review_id: reviewId } });
     });
   }
+
+  async findByProductIds(productIds: number[]) {
+    return this.prisma.reviews.findMany({
+      where: { product_id: { in: productIds } },
+      include: { 
+        review_media: true,
+        customers: true,
+        order_items: true,
+      },
+      orderBy: { created_at: 'desc' },
+    });
+  }
 }

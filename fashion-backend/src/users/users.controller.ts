@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Put,
+  Post,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -11,6 +12,8 @@ import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { changePasswordDto } from './dto/changePassword.dto';
+import { ForgotPasswordDto } from './dto/forgotPassword.dto';
+import { ResetPasswordDto } from './dto/resetPassword.dto';
 
 
 @ApiTags('User')
@@ -53,5 +56,23 @@ export class UsersController {
     @Request() req,
   ) {
     return this.userService.changePassword(req.user.user_id, changePasswordDto.oldPassword, changePasswordDto.newPassword);
+  }
+
+  @Post('forgotPassword')
+  @ApiOperation({ summary: 'forgot password' })
+  @ApiResponse({ status: 200, description: 'Email sent successfully' })
+  async forgotPassword(
+    @Body() forgotPasswordDto: ForgotPasswordDto,
+  ) {
+    return this.userService.forgotPassword(forgotPasswordDto.email);
+  }
+
+  @Post('resetPassword')
+  @ApiOperation({ summary: 'Reset password with token' })
+  @ApiResponse({ status: 200, description: 'Password reset successfully' })
+  async resetPassword(
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ) {
+    return this.userService.resetPassword(resetPasswordDto.token, resetPasswordDto.newPassword);
   }
 }

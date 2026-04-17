@@ -21,4 +21,13 @@ export class UpdateCartDto {
   @Type(() => Number)
   @IsNumber()
   variant_id?: number;
+
+  @ApiPropertyOptional({
+    example: 5,
+    description: 'Mockup render ID (if product was customized via POD)',
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  render_id?: number;
 }

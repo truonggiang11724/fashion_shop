@@ -15,7 +15,13 @@ export class OrdersService {
         ...data,
         order_items: items ? { create: items } : undefined,
       },
-      include: { order_items: true },
+      include: { 
+        order_items: {
+          include: {
+            mockup_renders: true,
+          }
+        } 
+      },
     });
   }
 
@@ -25,16 +31,29 @@ export class OrdersService {
         customer_id: userId
       },
       orderBy: { created_at : "desc" },
-      include: { order_items: true },
+      include: { 
+        order_items: {
+          include: {
+            mockup_renders: true,
+          }
+        } 
+      },
     });
   }
 
   async findOne(orderId: number) {
     return this.prisma.orders.findUnique({
       where: { order_id: orderId },
-      include: { order_items: {include: {product_variants: 
-        {include:  {products: true}}
-      }},  },
+      include: { 
+        order_items: {
+          include: {
+            product_variants: {
+              include: { products: true }
+            },
+            mockup_renders: true,
+          }
+        },  
+      },
     });
   }
 
@@ -52,7 +71,13 @@ export class OrdersService {
           ...data,
           order_items: items ? { create: items } : undefined,
         },
-        include: { order_items: true },
+        include: { 
+          order_items: {
+            include: {
+              mockup_renders: true,
+            }
+          } 
+        },
       });
     });
   }
@@ -71,6 +96,32 @@ export class OrdersService {
       });
       await prisma.cancel_requests.deleteMany({ where: { order_id: orderId } });
       return prisma.orders.delete({ where: { order_id: orderId } });
+    });
+  }
+
+  async findBySellerId(sellerId: number) {
+    return this.prisma.orders.findMany({
+      include: {
+        order_items: {
+          include: {
+            product_variants: {
+              include: {
+                products: true,
+              },
+            },
+            mockup_renders: true,
+          },
+          where: {
+            product_variants: {
+              products: {
+                seller_id: sellerId,
+              },
+            },
+          },
+        },
+        customers: true,
+      },
+      orderBy: { created_at: 'desc' },
     });
   }
 }

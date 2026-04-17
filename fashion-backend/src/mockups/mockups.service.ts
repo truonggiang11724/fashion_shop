@@ -7,17 +7,29 @@ import * as path from 'path';
 
 @Injectable()
 export class MockupsService {
-  private readonly DYNAMIC_MOCKUPS_API_URL = process.env.DYNAMIC_MOCKUPS_API_URL || 'https://app.dynamicmockups.com/api/v1/renders';
-  private readonly DYNAMIC_MOCKUPS_API_KEY = process.env.DYNAMIC_MOCKUPS_API_KEY;
+  private readonly SUDOMOCK_API_URL = 'https://api.sudomock.com/api/v1/renders';
+  private readonly SUDOMOCK_API_KEY = process.env.SUDOMOCK_API_KEY;
 
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   /**
    * Get all available mockup templates
+   * @param isActive - Filter by active status
+   * @param variantId - Optional variant ID to filter templates
    */
-  async getTemplates(isActive: boolean = true) {
+  async getTemplates(isActive: boolean = true, variantId?: number | null) {
+    const where: any = {};
+
+    if (isActive) {
+      where.is_active = true;
+    }
+
+    if (variantId) {
+      where.variant_id = variantId;
+    }
+
     return this.prisma.mockup_templates.findMany({
-      where: isActive ? { is_active: true } : {},
+      where,
       orderBy: { created_at: 'desc' },
     });
   }
@@ -75,7 +87,7 @@ export class MockupsService {
    */
   async renderMockup(userId: number, createMockupDto: CreateMockupRenderDto) {
     // Validate template exists
-    const template = await this.getTemplate(createMockupDto.template_id);
+    const template = await this.getTemplate(createMockupDto.template_id);    
 
     // Validate design image URL
     if (!createMockupDto.design_image_url) {
@@ -102,20 +114,21 @@ export class MockupsService {
     });
 
     try {
-      // Prepare smart objects for DynamicMockups API
-      const smartObjects = this.prepareSmarty_objects(
+      // Prepare smart objects for Sudomock API
+      const smartObjects = this.prepareSmartObjects(
         template,
         createMockupDto.design_image_url,
         createMockupDto.render_config,
-      );      
-      
-      // Call DynamicMockups API
-      const renderResponse = await this.callDynamicMockupsAPI(
-        template.mockup_uuid,
-        smartObjects,
       );
 
-      
+      // Call Sudomock API
+      const renderResponse = await this.callSudomockAPI(
+        template.mockup_uuid,
+        smartObjects,
+        createMockupDto.render_config,
+      );
+
+
 
       // Update render record with success
       const updatedRender = await this.prisma.mockup_renders.update({
@@ -196,25 +209,47 @@ export class MockupsService {
   }
 
   /**
-   * Prepare smart objects for DynamicMockups API
+   * Prepare smart objects for Sudomock API
    */
-  private prepareSmarty_objects(template: any, designUrl: string, config?: any): Array<any> {
-    const smartObjects: Array<any> = [];
+  private prepareSmartObjects(template: any, designUrl: string, config?: any): Array<any> {
+    const smartObjects: Array<any> = [];    
 
     // If template has smart_objects defined, use them
     if (template.smart_objects && Array.isArray(template.smart_objects)) {
       const mapped = (template.smart_objects as any[]).map((obj: any) => ({
         uuid: obj.uuid || obj.id,
-        asset: { url: designUrl },
-        color: config?.color || obj.color || '#ffffff',
+        asset: {
+          url: designUrl,
+          fit: config?.fit || 'fill',
+          size: {
+            width: 672,
+            height: 610
+          },
+          position: {
+            top: 50,
+            left: 50
+          },
+          rotate: 0
+        },
       }));
       smartObjects.push(...mapped);
     } else {
       // Use default single smart object
       smartObjects.push({
-        uuid: config?.smart_object_id || 'default',
-        asset: { url: designUrl },
-        color: config?.color || '#ffffff',
+        uuid: config?.uuid || 'default',
+        asset: {
+          url: designUrl,
+          fit: config?.fit || 'fill',
+          size: {
+            width: 672,
+            height: 610
+          },
+          position: {
+            top: 50,
+            left: 50
+          },
+          rotate: 0
+        },
       });
     }
 
@@ -222,47 +257,58 @@ export class MockupsService {
   }
 
   /**
-   * Call DynamicMockups API to render mockup
+   * Call Sudomock API to render mockup
    */
-  private async callDynamicMockupsAPI(
+  private async callSudomockAPI(
     mockupUuid: string,
     smartObjects: any[],
+    config?: any,
   ) {
-    if (!this.DYNAMIC_MOCKUPS_API_KEY) {
+    if (!this.SUDOMOCK_API_KEY) {
       throw new Error(
-        'DynamicMockups API key not configured. Set DYNAMIC_MOCKUPS_API_KEY environment variable.',
+        'Sudomock API key not configured. Set SUDOMOCK_API_KEY environment variable.',
       );
     }
 
     try {
+      const requestBody = {
+        mockup_uuid: mockupUuid,
+        smart_objects: smartObjects,
+        export_options: {
+          image_format: config?.image_format || 'webp',
+          image_size: config?.image_size || 1920,
+          quality: config?.quality || 95,
+        },
+      };
+      console.log(JSON.stringify(requestBody));
+
+
       const response = await axios.post(
-        this.DYNAMIC_MOCKUPS_API_URL,
-        JSON.stringify({
-          mockup_uuid: mockupUuid,
-          smart_objects: smartObjects,
-        }),
+        this.SUDOMOCK_API_URL,
+        (JSON.stringify(requestBody)),
         {
           headers: {
             'Content-Type': 'application/json',
-            'x-api-key': this.DYNAMIC_MOCKUPS_API_KEY,
+            'x-api-key': this.SUDOMOCK_API_KEY,
             'Accept': 'application/json',
           },
           timeout: 30000,
         },
       );
 
-      if (!response.data?.data?.rendered_image_url) {
-        throw new Error('No rendered_image_url in response');
+      if (!response.data?.success || !response.data?.data?.print_files?.[0]?.export_path) {
+        throw new Error('No export_path in response');
       }
 
       return {
-        rendered_image_url: response.data.data.rendered_image_url,
-        render_id: response.data.data.render_id,
+        rendered_image_url: response.data.data.print_files[0].export_path,
       };
     } catch (error) {
-      throw new Error(
-        `DynamicMockups API error: `,
-      );
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.detail || error.message;
+        throw new Error(`Sudomock API error: ${errorMessage}`);
+      }
+      throw error;
     }
   }
 

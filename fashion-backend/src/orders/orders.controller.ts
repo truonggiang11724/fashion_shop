@@ -33,7 +33,9 @@ export class OrdersController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all orders' })
   @ApiResponse({ status: 200, description: 'List of orders' })
-  findAll(@Request() req) {
+  findAll(@Request() req: any) {
+    console.log(req.user);
+    
     return this.ordersService.findAll(req.user.user_id);
   }
 

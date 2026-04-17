@@ -29,25 +29,39 @@ export class CartService {
   async findOne(cartId: number) {
     return this.prisma.carts.findUnique({
       where: { cart_id: cartId },
-      include: { cart_items: { include: { product_variants: true } } },
+      include: { 
+        cart_items: { 
+          include: { 
+            product_variants: true,
+            mockup_renders: true,
+          } 
+        } 
+      },
     });
   }
 
   async findByCustomerId(customer_id: number) {
     return this.prisma.carts.findFirst({
       where: { customer_id: customer_id },
-      include: { cart_items: { include: { product_variants: { include: { products: true } } } } },
+      include: { 
+        cart_items: { 
+          include: { 
+            product_variants: { include: { products: true } },
+            mockup_renders: true,
+          } 
+        } 
+      },
     });
   }
 
   async addToCart(updateCartDto: UpdateCartDto) {
-    const { customer_id, variant_id } = updateCartDto;
+    const { customer_id, variant_id, render_id } = updateCartDto;
 
     if (!customer_id) return;
     const cart = await this.findByCustomerId(customer_id);
 
     for (const item of cart?.cart_items || []) {
-      if (item.variant_id == variant_id) {
+      if (item.variant_id == variant_id && item.render_id == render_id) {
         return this.updateQuantity({
           cart_item_id: item.cart_item_id,
           quantity: item.quantity ? item.quantity + 1 : 1,
@@ -61,6 +75,7 @@ export class CartService {
           cart_id: cart?.cart_id,
           variant_id: variant_id,
           quantity: 1,
+          render_id: render_id || null,
         },
         include: {product_variants: {include: {products: true}},}
       });

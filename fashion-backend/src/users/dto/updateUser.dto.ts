@@ -3,10 +3,10 @@ import { IsEmail, IsNotEmpty, IsOptional, isPhoneNumber, IsString, MaxLength, Mi
 
 export class UpdateUserDto {
   @ApiProperty({ example: 'johndoe', description: 'username' })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(3)
-  username!: string;
+  username?: string;
 
   @ApiProperty({
     example: '0912345678',
@@ -15,5 +15,22 @@ export class UpdateUserDto {
   @IsOptional()
   @MinLength(10)
   @MaxLength(10)
-  phone!: string;
+  phone?: string;
+
+  @ApiProperty({
+    example: 'John Doe',
+    description: 'User full name',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(150)
+  full_name?: string;
+
+  @ApiProperty({
+    example: '/uploads/avatar.jpg',
+    description: 'User avatar URL',
+  })
+  @IsOptional()
+  @IsString()
+  avatar_url?: string;
 }

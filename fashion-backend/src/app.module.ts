@@ -11,6 +11,7 @@ import { OrdersModule } from './orders/orders.module';
 import { PaymentsModule } from './payments/payments.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { AdminModule } from './admin/admin.module';
+import { SellerModule } from './seller/seller.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { UploadModule } from './upload/upload.module';
@@ -29,6 +30,7 @@ import { MockupsModule } from './mockups/mockups.module';
     PaymentsModule,
     ReviewsModule,
     AdminModule,
+    SellerModule,
     UploadModule,
     AddressesModule,
     MockupsModule,

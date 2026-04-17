@@ -39,6 +39,8 @@ export class ProductsService {
       include: {
         product_variants: true,
         product_media: true,
+        reviews: true,
+        categories: true,
       },
     });
   }
@@ -82,6 +84,18 @@ export class ProductsService {
         where: { product_id: productId },
       });
       return prisma.products.delete({ where: { product_id: productId } });
+    });
+  }
+
+  async findBySellerId(sellerId: number) {
+    return this.prisma.products.findMany({
+      where: { seller_id: sellerId },
+      include: {
+        product_variants: true,
+        product_media: true,
+        reviews: true,
+      },
+      orderBy: { created_at: 'desc' },
     });
   }
 }

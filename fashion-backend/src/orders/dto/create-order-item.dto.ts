@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateOrderItemDto {
@@ -23,4 +23,10 @@ export class CreateOrderItemDto {
   @Type(() => Number)
   @IsNumber()
   unit_price!: number;
+
+  @ApiPropertyOptional({ example: 5, description: 'Mockup render ID (if product was customized)' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  render_id?: number;
 }
