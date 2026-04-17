@@ -23,17 +23,17 @@ const Orders = () => {
   };
 
   const statusOptions = [
-    { value: '', label: 'All Status' },
-    { value: 'pending', label: 'Pending' },
-    { value: 'processing', label: 'Processing' },
-    { value: 'shipped', label: 'Shipped' },
-    { value: 'delivered', label: 'Delivered' },
-    { value: 'cancelled', label: 'Cancelled' },
+    { value: '', label: 'Tất cả Trạng Thái' },
+    { value: 'pending', label: 'Chờ Xử Lý' },
+    { value: 'processing', label: 'Đang Xử Lý' },
+    { value: 'shipped', label: 'Đã Lệp Hàng' },
+    { value: 'delivered', label: 'Đã Giao' },
+    { value: 'cancelled', label: 'Đã Hủy' },
   ];
 
   const columns = [
     {
-      header: 'Order ID',
+      header: 'Mã Đơn',
       key: 'order_id',
       render: (row) => (
         <Link
@@ -45,17 +45,17 @@ const Orders = () => {
       ),
     },
     {
-      header: 'Customer',
+      header: 'Khách Hàng',
       key: 'customer',
       render: (row) => row.customer?.username || 'N/A',
     },
     {
-      header: 'Total',
+      header: 'Tổng Tiền',
       key: 'total_amount',
       render: (row) => `$${row.total_amount || 0}`,
     },
     {
-      header: 'Status',
+      header: 'Trạng Thái',
       key: 'status',
       render: (row) => (
         <Select
@@ -67,7 +67,7 @@ const Orders = () => {
       ),
     },
     {
-      header: 'Date',
+      header: 'Ngày',
       key: 'created_at',
       render: (row) => new Date(row.created_at).toLocaleDateString(),
     },
@@ -76,7 +76,7 @@ const Orders = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Quản Lý Đơn Hàng</h1>
       </div>
 
       {error && (
@@ -99,7 +99,7 @@ const Orders = () => {
         columns={columns}
         data={orders}
         loading={loading}
-        emptyMessage="No orders found"
+        emptyMessage="Không tìm thấy đơn hàng"
       />
 
       {/* Pagination */}
@@ -110,15 +110,15 @@ const Orders = () => {
             disabled={page === 1}
             className="bg-gray-300 text-gray-700 hover:bg-gray-400 disabled:opacity-50"
           >
-            Previous
+            Quay Lại
           </Button>
-          <span className="px-4 py-2">Page {page} of {Math.ceil(total / limit)}</span>
+          <span className="px-4 py-2">Trang {page} của {Math.ceil(total / limit)}</span>
           <Button
             onClick={() => dispatch(setPage(page + 1))}
             disabled={page >= Math.ceil(total / limit)}
             className="bg-gray-300 text-gray-700 hover:bg-gray-400 disabled:opacity-50"
           >
-            Next
+            Tiếp theo
           </Button>
         </div>
       )}

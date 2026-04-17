@@ -69,10 +69,10 @@ const Categories = () => {
   };
 
   const columns = [
-    { header: 'Name', key: 'name' },
-    { header: 'Description', key: 'description' },
+    { header: 'Tên', key: 'name' },
+    { header: 'Mô Tả', key: 'description' },
     {
-      header: 'Actions',
+      header: 'Hành Động',
       key: 'actions',
       render: (row) => (
         <div className="flex space-x-2">
@@ -96,7 +96,7 @@ const Categories = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Categories</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Danh Mục</h1>
         <Button
           onClick={() => {
             setEditingCategory(null);
@@ -106,7 +106,7 @@ const Categories = () => {
           className="bg-orange-500 text-white hover:bg-orange-600"
         >
           <Plus size={16} className="mr-2" />
-          Add Category
+          Thêm Danh Mục
         </Button>
       </div>
 
@@ -114,26 +114,26 @@ const Categories = () => {
         columns={columns}
         data={categories}
         loading={loading}
-        emptyMessage="No categories found"
+        emptyMessage="Không tìm thấy danh mục"
       />
 
       {/* Modal */}
       <Modal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={editingCategory ? 'Edit Category' : 'Add Category'}
+        title={editingCategory ? 'Chỉnh Sửa Danh Mục' : 'Thêm Danh Mục'}
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             type="text"
-            placeholder="Category Name"
+            placeholder="Tên Danh Mục"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             required
           />
           <Input
             type="text"
-            placeholder="Description"
+            placeholder="Mô Tả"
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           />
@@ -143,7 +143,7 @@ const Categories = () => {
               onClick={() => setModalOpen(false)}
               className="bg-gray-300 text-gray-700 hover:bg-gray-400"
             >
-              Cancel
+              Hủy
             </Button>
             <Button
               type="submit"

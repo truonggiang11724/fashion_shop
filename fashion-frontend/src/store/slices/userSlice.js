@@ -14,10 +14,37 @@ export const getMe = createAsyncThunk('auth/getMe', async (_, { rejectWithValue 
 
 export const updateProfile = createAsyncThunk('auth/updateProfile', async (payload, { rejectWithValue }) => {
   try {
-    const response = await api.put('/users/profile', payload);
+    const response = await api.put('/user/me', payload);
     return response.data;
   } catch (err) {
     return rejectWithValue(err?.response?.data || { message: 'Update profile failed' });
+  }
+});
+
+export const changePassword = createAsyncThunk('auth/changePassword', async (payload, { rejectWithValue }) => {
+  try {
+    const response = await api.put('/user/changePassword', payload);
+    return response.data;
+  } catch (err) {
+    return rejectWithValue(err?.response?.data || { message: 'Change password failed' });
+  }
+});
+
+export const forgotPassword = createAsyncThunk('auth/forgotPassword', async (email, { rejectWithValue }) => {
+  try {
+    const response = await api.post('/user/forgotPassword', { email });
+    return response.data;
+  } catch (err) {
+    return rejectWithValue(err?.response?.data || { message: 'Forgot password request failed' });
+  }
+});
+
+export const resetPassword = createAsyncThunk('auth/resetPassword', async (payload, { rejectWithValue }) => {
+  try {
+    const response = await api.post('/user/resetPassword', payload);
+    return response.data;
+  } catch (err) {
+    return rejectWithValue(err?.response?.data || { message: 'Password reset failed' });
   }
 });
 
@@ -56,9 +83,51 @@ const userSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload?.message || 'User not authenticated';
       })
+      .addCase(updateProfile.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
       .addCase(updateProfile.fulfilled, (state, action) => {
+        state.status = 'succeeded';
         state.user = action.payload;
         localStorage.setItem('user', JSON.stringify(action.payload));
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload?.message;
+      })
+      .addCase(changePassword.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(changePassword.fulfilled, (state) => {
+        state.status = 'succeeded';
+      })
+      .addCase(changePassword.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload?.message;
+      })
+      .addCase(forgotPassword.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(forgotPassword.fulfilled, (state) => {
+        state.status = 'succeeded';
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload?.message;
+      })
+      .addCase(resetPassword.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(resetPassword.fulfilled, (state) => {
+        state.status = 'succeeded';
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload?.message;
       });
   },
 });

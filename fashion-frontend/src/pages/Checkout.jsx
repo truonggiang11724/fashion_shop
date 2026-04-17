@@ -107,11 +107,11 @@ export default function Checkout() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user_cart?.cart_items?.length) {
-      setError('Cart is empty');
+      setError('Giỏ hàng trống');
       return;
     }
     if (!selectedAddress) {
-      setError('Please select a shipping address');
+      setError('Vui lòng chọn địa chỉ giao hàng');
       return;
     }
 
@@ -125,13 +125,23 @@ export default function Checkout() {
         order_status: 'PENDING',
         payment_status: 'UNPAID',
         total_amount: Number(grandTotal),
-        items: user_cart?.cart_items?.map((item) => ({ variant_id: item.product_variants.variant_id, quantity: item.quantity, unit_price: Number(item.product_variants.price) })),
+        items: user_cart?.cart_items?.map((item) => {
+          const orderItem = {
+            variant_id: item.product_variants.variant_id,
+            quantity: item.quantity,
+            unit_price: Number(item.product_variants.price)
+          };
+          if (item.render_id) {
+            orderItem.render_id = item.render_id;
+          }
+          return orderItem;
+        }),
       })).unwrap();
       dispatch(removeAllCartItem(user_cart.cart_id));
       setStatus('succeeded');
       setTimeout(() => navigate('/orders'), 1200);
     } catch (err) {
-      setError(err?.message || 'Checkout failed');
+      setError(err?.message || 'Thanh toán thất bại');
       setStatus('failed');
     }
   };
@@ -202,7 +212,7 @@ export default function Checkout() {
   };
 
   const handleDeleteAddress = async (id) => {
-    if (confirm('Are you sure you want to delete this address?')) {
+    if (confirm('Bạn có chắc chắn muốn xoá địa chỉ này không?')) {
       try {
         await addressService.deleteAddress(id);
         const response = await addressService.getAddresses();
@@ -318,6 +328,9 @@ export default function Checkout() {
         <div className="flex justify-between text-xl font-bold">
           <span>Tổng tiền cần thanh toán</span>
           <span>${grandTotal ? grandTotal.toFixed(2) : 0}</span>
+        </div>
+        <div>
+          <span style={{color: "red"}}>Lưu ý: Số tiền trên chưa bao gồm phí ship. Nhân viên sẽ liên hệ thông báo phí ship sau khi xác nhận đơn hàng.</span>
         </div>
 
         <button disabled={status === 'loading'} onClick={handleSubmit} className="w-full bg-gray-800 text-white py-2 rounded hover:bg-gray-900 disabled:opacity-60 font-medium transition">

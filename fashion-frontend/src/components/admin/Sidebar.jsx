@@ -5,15 +5,15 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const location = useLocation();
 
   const menuItems = [
-    { path: '/admin', label: 'Dashboard', icon: '📊' },
-    { path: '/admin/products', label: 'Products', icon: '🛍️' },
-    { path: '/admin/categories', label: 'Categories', icon: '📂' },
-    { path: '/admin/orders', label: 'Orders', icon: '📦' },
-    { path: '/admin/users', label: 'Users', icon: '👥' },
-    { path: '/admin/sellers', label: 'Sellers', icon: '🏪' },
-    { path: '/admin/reviews', label: 'Reviews', icon: '⭐' },
-    { path: '/admin/promotions', label: 'Promotions', icon: '🎉' },
-    { path: '/admin/wallets', label: 'Wallets', icon: '💰' },
+    { path: '/admin', label: 'Bảng điều khiển', icon: '📊' },
+    { path: '/admin/products', label: 'Sản phẩm', icon: '🛍️' },
+    { path: '/admin/categories', label: 'Danh mục', icon: '📂' },
+    { path: '/admin/orders', label: 'Đơn hàng', icon: '📦' },
+    { path: '/admin/users', label: 'Tài khoản', icon: '👥' },
+    { path: '/admin/sellers', label: 'Quản lý bán hàng', icon: '🏪' },
+    { path: '/admin/reviews', label: 'Đánh giá', icon: '⭐' },
+    { path: '/admin/promotions', label: 'Khuyến mãi', icon: '🎉' },
+    { path: '/admin/wallets', label: 'Ví', icon: '💰' },
   ];
 
   return (

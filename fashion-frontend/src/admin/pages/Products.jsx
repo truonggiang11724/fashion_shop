@@ -183,7 +183,7 @@ const Products = () => {
 
   const columns = [
     {
-      header: 'Image',
+      header: 'Hình Ảnh',
       key: 'image',
       render: (row) => (
         <img
@@ -196,14 +196,14 @@ const Products = () => {
         />
       ),
     },
-    { header: 'Name', key: 'name', render: (row) => `${row.product_name}` },
-    { header: 'Price', key: 'price', render: (row) => `${getProductPrice(row.product_variants)}` },
+    { header: 'Tên Sản Phẩm', key: 'name', render: (row) => `${row.product_name}` },
+    { header: 'Giá', key: 'price', render: (row) => `${getProductPrice(row.product_variants)}` },
     {
-      header: 'Description', key: 'description', render: (row) => `${row.description.length > 100 ? row.description.slice(0, 100) + '...' : row.description}`
+      header: 'Mô Tả', key: 'description', render: (row) => `${row.description.length > 100 ? row.description.slice(0, 100) + '...' : row.description}`
     },
 
     {
-      header: 'Actions',
+      header: 'Hành Động',
       key: 'actions',
       render: (row) => (
         <div className="flex space-x-2">
@@ -261,7 +261,7 @@ const Products = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Products</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Quản Lý Sản Phẩm</h1>
         <Button
           onClick={() => {
             setEditingProduct(null);
@@ -271,7 +271,7 @@ const Products = () => {
           className="bg-orange-500 text-white hover:bg-orange-600"
         >
           <Plus size={16} className="mr-2" />
-          Add Product
+          Thêm Sản Phẩm
         </Button>
       </div>
 
@@ -285,7 +285,7 @@ const Products = () => {
       <div className="flex space-x-4">
         <Input
           type="text"
-          placeholder="Search products..."
+          placeholder="Tìm kiếm sản phẩm..."
           value={search}
           onChange={(e) => dispatch(setSearch(e.target.value))}
           className="max-w-xs"
@@ -296,7 +296,7 @@ const Products = () => {
         columns={columns}
         data={items}
         loading={loading}
-        emptyMessage="No products found"
+        emptyMessage="Không tìm thấy sản phẩm"
       />
 
       {/* Pagination */}
@@ -307,15 +307,15 @@ const Products = () => {
             disabled={page === 1}
             className="bg-gray-300 text-gray-700 hover:bg-gray-400 disabled:opacity-50"
           >
-            Previous
+            Quay Lại
           </Button>
-          <span className="px-4 py-2">Page {page} of {Math.ceil(total / limit)}</span>
+          <span className="px-4 py-2">Trang {page} của {Math.ceil(total / limit)}</span>
           <Button
             onClick={() => dispatch(setPage(page + 1))}
             disabled={page >= Math.ceil(total / limit)}
             className="bg-gray-300 text-gray-700 hover:bg-gray-400 disabled:opacity-50"
           >
-            Next
+            Tiếp Theo
           </Button>
         </div>
       )}
@@ -324,18 +324,18 @@ const Products = () => {
       <Modal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={editingProduct ? 'Edit Product' : 'Add Product'}
+        title={editingProduct ? 'Chỉnh Sửa Sản Phẩm' : 'Thêm Sản Phẩm'}
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             type="text"
-            placeholder="Product Name"
+            placeholder="Tên Sản Phẩm"
             value={formData.product_name}
             onChange={(e) => setFormData({ ...formData, product_name: e.target.value })}
             required
           />
           <Textarea
-            placeholder="Description"
+            placeholder="Mô Tả"
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             rows={3}
@@ -385,52 +385,52 @@ const Products = () => {
               onClick={() => setModalOpen(false)}
               className="bg-gray-300 text-gray-700 hover:bg-gray-400"
             >
-              Cancel
+              Hủy
             </Button>
             <Button
               type="submit"
               className="bg-orange-500 text-white hover:bg-orange-600"
             >
-              {editingProduct ? 'Update' : 'Create'}
+              {editingProduct ? 'Cập Nhật' : 'Tạo Mới'}
             </Button>
           </div>
           <div>
             <div className="flex justify-between items-center">
-              <h3 className="font-semibold">Product Variants</h3>
-              <Button type="button" onClick={addVariant}>+ Add Variant</Button>
+              <h3 className="font-semibold">Biến Thể Sản Phẩm</h3>
+              <Button type="button" onClick={addVariant}>+ Thêm Biến Thể</Button>
             </div>
 
             {formData.product_variants.map((variant, index) => (
               <div key={index} className="border p-3 mt-3 rounded space-y-2">
 
                 <Input
-                  placeholder="SKU"
+                  placeholder="Mã SKU"
                   value={variant.sku}
                   onChange={(e) => updateVariant(index, 'sku', e.target.value)}
                 />
 
                 <Input
-                  placeholder="Color"
+                  placeholder="Màu Sắc"
                   value={variant.color}
                   onChange={(e) => updateVariant(index, 'color', e.target.value)}
                 />
 
                 <Input
-                  placeholder="Size"
+                  placeholder="Kích Cỡ (Size)"
                   value={variant.size}
                   onChange={(e) => updateVariant(index, 'size', e.target.value)}
                 />
 
                 <Input
                   type="number"
-                  placeholder="Price"
+                  placeholder="Giá"
                   value={variant.price}
                   onChange={(e) => updateVariant(index, 'price', e.target.value)}
                 />
 
                 <Input
                   type="number"
-                  placeholder="Stock"
+                  placeholder="Tổng Số Kho"
                   value={variant.stock_quantity}
                   onChange={(e) => updateVariant(index, 'stock_quantity', e.target.value)}
                 />
@@ -454,7 +454,7 @@ const Products = () => {
                   className="bg-red-500 text-white"
                   onClick={() => removeVariant(index)}
                 >
-                  Remove
+                  Xoá
                 </Button>
               </div>
             ))}
@@ -467,9 +467,9 @@ const Products = () => {
         isOpen={!!confirmDelete}
         onClose={() => setConfirmDelete(null)}
         onConfirm={handleDelete}
-        title="Delete Product"
-        message={`Are you sure you want to delete "${confirmDelete?.product_name}"?`}
-        confirmText="Delete"
+        title="Xóa Sản Phẩm"
+        message={`Bạn có chắc chắn muốn xóa "${confirmDelete?.product_name}"?`}
+        confirmText="Xóa"
       />
     </div>
   );

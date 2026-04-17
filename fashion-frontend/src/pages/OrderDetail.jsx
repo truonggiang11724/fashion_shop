@@ -15,7 +15,7 @@ export default function OrderDetail() {
     dispatch(fetchOrderById(id));
   }, [dispatch, id]);
 
-  if (detailStatus === 'loading') return <LoadingSpinner message="Loading order detail..." />;
+  if (detailStatus === 'loading') return <LoadingSpinner message="Đang tải chi tiết đơn hàng..." />;
   if (detailStatus === 'failed') return <p className="text-red-600 text-center font-medium">{detailError}</p>;
   if (!detail) return <p className="text-gray-600 text-center">Không tìm thấy đơn hàng.</p>;
 

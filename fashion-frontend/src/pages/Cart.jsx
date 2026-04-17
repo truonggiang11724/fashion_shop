@@ -37,7 +37,7 @@ export default function Cart() {
       </div>
     </main>
   );
-  if (status === 'loading' || status === 'idle') return <LoadingSpinner message="Loading cart..." />;
+  if (status === 'loading' || status === 'idle') return <LoadingSpinner message="Đang tải giỏ hàng..." />;
   if (status === 'failed') return <p className="text-red-600 text-center">{error}</p>;
 
 
@@ -77,7 +77,7 @@ export default function Cart() {
           <button
             onClick={() => navigate('/checkout')}
             className="mt-4 w-full bg-gray-800 text-white py-2 rounded-lg hover:bg-gray-900 font-medium">
-            Proceed to Checkout
+            Tiếp tục Thanh Toán
           </button>
         </aside>
       </div>

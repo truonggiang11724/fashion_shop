@@ -11,21 +11,23 @@ const Reviews = () => {
     // Implement delete
     setConfirmDelete(null);
   };
+  console.log(reviews);
+  
 
   const columns = [
-    { header: 'Product', key: 'product_name' },
-    { header: 'User', key: 'username' },
-    { header: 'Rating', key: 'rating' },
-    { header: 'Comment', key: 'comment' },
+    { header: 'Sản Phẩm', key: 'product_name' },
+    { header: 'Người Dùng', key: 'username' },
+    { header: 'Xếp Hạng', key: 'rating' },
+    { header: 'Bình Luận', key: 'comment' },
     {
-      header: 'Actions',
+      header: 'Hành Động',
       key: 'actions',
       render: (row) => (
         <button
           onClick={() => setConfirmDelete(row)}
           className="text-red-600 hover:text-red-900"
         >
-          Delete
+          Xóa
         </button>
       ),
     },
@@ -33,20 +35,20 @@ const Reviews = () => {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Reviews</h1>
+      <h1 className="text-2xl font-bold text-gray-900">Quản Lý Đánh Giá</h1>
       <Table
         columns={columns}
         data={reviews}
         loading={loading}
-        emptyMessage="No reviews found"
+        emptyMessage="Không tìm thấy đánh giá"
       />
       <ConfirmDialog
         isOpen={!!confirmDelete}
         onClose={() => setConfirmDelete(null)}
         onConfirm={handleDelete}
-        title="Delete Review"
-        message="Are you sure you want to delete this review?"
-        confirmText="Delete"
+        title="Xóa Đánh Giá"
+        message="Bạn có chắc chắn muốn xóa đánh giá này không?"
+        confirmText="Xóa"
       />
     </div>
   );

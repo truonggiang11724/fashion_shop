@@ -19,7 +19,7 @@ export default function MockupGenerator() {
         const response = await mockupService.getTemplates(true);
         setTemplates(response.data);
       } catch (err) {
-        setError('Failed to load templates: ' + err.message);
+        setError('Không thể tải mẫu: ' + err.message);
       }
     };
 
@@ -33,13 +33,13 @@ export default function MockupGenerator() {
       setRenderHistory(response.data);
       setShowHistory(true);
     } catch (err) {
-      setError('Failed to load history: ' + err.message);
+      setError('Không thể tải lịch sử: ' + err.message);
     }
   };
 
   const handleRender = async () => {
     if (!selectedTemplate || !designUrl) {
-      setError('Please select a template and provide design URL');
+      setError('Vui lòng chọn mẫu và cung cấp URL thiết kế');
       return;
     }
 
@@ -61,7 +61,7 @@ export default function MockupGenerator() {
       // Refresh history after render
       fetchRenderHistory();
     } catch (err) {
-      setError('Failed to render mockup: ' + err.message);
+      setError('Không thể kết xuất mockup: ' + err.message);
     } finally {
       setRendering(false);
     }
@@ -72,18 +72,18 @@ export default function MockupGenerator() {
       await mockupService.deleteRender(renderId);
       setRenderHistory(renderHistory.filter(r => r.render_id !== renderId));
     } catch (err) {
-      setError('Failed to delete render: ' + err.message);
+      setError('Không thể xóa render: ' + err.message);
     }
   };
 
   return (
     <main className="max-w-6xl mx-auto p-4 mt-6">
-      <h1 className="text-3xl font-bold mb-6 text-gray-900">Mockup Generator</h1>
+      <h1 className="text-3xl font-bold mb-6 text-gray-900">Trợ Tạo Mockup</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Panel - Generator */}
         <div className="lg:col-span-2 bg-white border border-gray-200 rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-4 text-gray-900">Generate New Mockup</h2>
+          <h2 className="text-xl font-bold mb-4 text-gray-900">Tạo Mockup Mới</h2>
 
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 p-3 rounded mb-4">
@@ -94,7 +94,7 @@ export default function MockupGenerator() {
           {/* Template Selection */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Select Template
+              Chọn Mẫu
             </label>
             <select
               value={selectedTemplate?.template_id || ''}
@@ -106,7 +106,7 @@ export default function MockupGenerator() {
               }}
               className="w-full border border-gray-300 rounded-lg p-2 bg-white text-gray-700 focus:border-gray-500 focus:outline-none"
             >
-              <option value="">Choose a mockup template...</option>
+              <option value="">Chọn mẫu mockup...</option>
               {templates.map((template) => (
                 <option key={template.template_id} value={template.template_id}>
                   {template.name} ({template.category})
@@ -118,7 +118,7 @@ export default function MockupGenerator() {
           {/* Template Preview */}
           {selectedTemplate?.thumbnail_url && (
             <div className="mb-4">
-              <p className="text-sm font-medium text-gray-700 mb-2">Preview</p>
+              <p className="text-sm font-medium text-gray-700 mb-2">Xem Trước</p>
               <img
                 src={selectedTemplate.thumbnail_url}
                 alt={selectedTemplate.name}
@@ -130,7 +130,7 @@ export default function MockupGenerator() {
           {/* Design URL Input */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Design Image URL
+              URL Hình ảnh Thiết Kế
             </label>
             <input
               type="text"
@@ -140,19 +140,19 @@ export default function MockupGenerator() {
               className="w-full border border-gray-300 rounded-lg p-2 text-gray-700 focus:border-gray-500 focus:outline-none"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Enter URL of publicly accessible design image
+              Nhập URL hình ảnh thiết kế có thể truy cập công khai
             </p>
           </div>
 
           {/* Design Preview */}
           {designUrl && (
             <div className="mb-4">
-              <p className="text-sm font-medium text-gray-700 mb-2">Design Preview</p>
+              <p className="text-sm font-medium text-gray-700 mb-2">Xem Trước Thiết Kế</p>
               <img
                 src={designUrl}
                 alt="Design"
                 className="w-full h-48 object-cover border border-gray-300 rounded-lg"
-                onError={() => setError('Failed to load design image')}
+                onError={() => setError('Không thể tải hình ảnh thiết kế')}
               />
             </div>
           )}
@@ -160,7 +160,7 @@ export default function MockupGenerator() {
           {/* Color Selection */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Color (optional)
+              Màu (ţùy chọn)
             </label>
             <input
               type="color"
@@ -176,13 +176,13 @@ export default function MockupGenerator() {
             disabled={rendering || !selectedTemplate || !designUrl}
             className="w-full bg-gray-800 text-white py-2 rounded-lg hover:bg-gray-900 disabled:opacity-50 font-medium transition"
           >
-            {rendering ? 'Rendering Mockup...' : 'Generate Mockup'}
+            {rendering ? 'Đang Kết Xuất Mockup...' : 'Tạo Mockup'}
           </button>
         </div>
 
         {/* Right Panel - Result & History */}
         <div className="bg-white border border-gray-200 rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-4 text-gray-900">Result</h2>
+          <h2 className="text-xl font-bold mb-4 text-gray-900">Kết Quả</h2>
 
           {mockupUrl ? (
             <div className="space-y-3">
@@ -197,12 +197,12 @@ export default function MockupGenerator() {
                 rel="noopener noreferrer"
                 className="block text-center bg-gray-700 text-white py-2 rounded hover:bg-gray-800 font-medium transition"
               >
-                Download Mockup
+                Tải Mockup
               </a>
             </div>
           ) : (
             <div className="w-full h-48 bg-gray-100 border border-gray-300 rounded-lg flex items-center justify-center">
-              <p className="text-gray-500">Mockup will appear here</p>
+              <p className="text-gray-500">Mockup sẽ xuất hiện ở đây</p>
             </div>
           )}
 
@@ -212,13 +212,13 @@ export default function MockupGenerator() {
               onClick={fetchRenderHistory}
               className="text-sm font-medium text-gray-700 hover:text-gray-900 mb-3"
             >
-              {showHistory ? 'Hide' : 'Show'} Recent Renders
+              {showHistory ? 'Ẩn' : 'Hiển Thị'} Renders Gần Đây
             </button>
 
             {showHistory && (
               <div className="space-y-2">
                 {renderHistory.length === 0 ? (
-                  <p className="text-sm text-gray-500">No renders yet</p>
+                  <p className="text-sm text-gray-500">Chưa có renders nào</p>
                 ) : (
                   renderHistory.map((render) => (
                     <div

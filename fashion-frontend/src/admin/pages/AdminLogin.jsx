@@ -41,7 +41,7 @@ const AdminLogin = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Admin Login
+            Đăng Nhập Admin
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -53,7 +53,7 @@ const AdminLogin = () => {
           <div className="rounded-md shadow-sm -space-y-px">
             <Input
               type="email"
-              placeholder="Email address"
+              placeholder="Địa chỉ email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
@@ -61,7 +61,7 @@ const AdminLogin = () => {
             />
             <Input
               type="password"
-              placeholder="Password"
+              placeholder="Mật khẩu"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               required
@@ -73,7 +73,7 @@ const AdminLogin = () => {
             disabled={loading}
             className="w-full bg-orange-500 text-white hover:bg-orange-600 disabled:opacity-50"
           >
-            {loading ? 'Signing in...' : 'Sign in'}
+            {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </Button>
         </form>
       </div>

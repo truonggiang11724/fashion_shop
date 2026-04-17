@@ -5,6 +5,8 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import AdminLayout from './components/admin/AdminLayout';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
+import SellerLayout from './seller/components/SellerLayout';
+import ProtectedSellerRoute from './seller/components/ProtectedSellerRoute';
 import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
@@ -13,6 +15,7 @@ import Checkout from './pages/Checkout';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
+import ResetPassword from './pages/ResetPassword';
 import Orders from './pages/Orders';
 import OrderDetail from './pages/OrderDetail';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -28,6 +31,12 @@ import Reviews from './admin/pages/Reviews';
 import Promotions from './admin/pages/Promotions';
 import Wallets from './admin/pages/Wallets';
 import MockupGenerator from './pages/MockupGenerator';
+// Seller pages
+import SellerDashboard from './seller/pages/Dashboard';
+import SellerProducts from './seller/pages/Products';
+import SellerOrders from './seller/pages/Orders';
+import SellerReviews from './seller/pages/Reviews';
+import SellerWallet from './seller/pages/Wallet';
 
 export default function App() {
   return (
@@ -84,6 +93,13 @@ export default function App() {
               <Footer />
             </>
           } />
+          <Route path="/reset-password" element={
+            <>
+              <Navbar />
+              <ResetPassword />
+              <Footer />
+            </>
+          } />
           <Route path="/profile" element={
             <>
               <Navbar />
@@ -111,6 +127,43 @@ export default function App() {
               <ProtectedRoute><MockupGenerator /></ProtectedRoute>
               <Footer />
             </>
+          } />
+
+          {/* Seller Routes */}
+          <Route path="/seller" element={
+            <ProtectedSellerRoute>
+              <SellerLayout>
+                <SellerDashboard />
+              </SellerLayout>
+            </ProtectedSellerRoute>
+          } />
+          <Route path="/seller/products" element={
+            <ProtectedSellerRoute>
+              <SellerLayout>
+                <SellerProducts />
+              </SellerLayout>
+            </ProtectedSellerRoute>
+          } />
+          <Route path="/seller/orders" element={
+            <ProtectedSellerRoute>
+              <SellerLayout>
+                <SellerOrders />
+              </SellerLayout>
+            </ProtectedSellerRoute>
+          } />
+          <Route path="/seller/reviews" element={
+            <ProtectedSellerRoute>
+              <SellerLayout>
+                <SellerReviews />
+              </SellerLayout>
+            </ProtectedSellerRoute>
+          } />
+          <Route path="/seller/wallet" element={
+            <ProtectedSellerRoute>
+              <SellerLayout>
+                <SellerWallet />
+              </SellerLayout>
+            </ProtectedSellerRoute>
           } />
 
           {/* Admin Routes */}

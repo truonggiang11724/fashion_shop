@@ -43,7 +43,7 @@ export default function Home() {
             onChange={(e) => setCategoryId(e.target.value)}
             className="border border-gray-300 rounded-lg p-2 bg-white text-gray-700 hover:border-gray-400"
           >
-            <option value="">All</option>
+            <option value="">Tất cả</option>
             {(categories || []).map((cat) => (
               <option key={cat.category_id || cat.id} value={cat.category_id || cat.id}>{cat.category_name || cat.name}</option>
             ))}
@@ -58,7 +58,7 @@ export default function Home() {
         />
       </div>
 
-      {status === 'loading' && <LoadingSpinner message="Loading featured products..." />}
+      {status === 'loading' && <LoadingSpinner message="Đang tải sản phẩm nổi bật..." />}
       {status === 'failed' && <p className="text-red-600">{error}</p>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

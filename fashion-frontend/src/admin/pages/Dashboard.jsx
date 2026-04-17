@@ -16,7 +16,7 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+      <h1 className="text-2xl font-bold text-gray-900">Bảng Điều Khiển</h1>
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
@@ -32,7 +32,7 @@ const Dashboard = () => {
               <span className="text-white text-xl">👥</span>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Users</p>
+              <p className="text-sm font-medium text-gray-600">Tổng Người Dùng</p>
               <p className="text-2xl font-bold text-gray-900">{stats.totalUsers || 0}</p>
             </div>
           </div>
@@ -44,7 +44,7 @@ const Dashboard = () => {
               <span className="text-white text-xl">📦</span>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Orders</p>
+              <p className="text-sm font-medium text-gray-600">Tổng Đơn Hàng</p>
               <p className="text-2xl font-bold text-gray-900">{stats.totalOrders || 0}</p>
             </div>
           </div>
@@ -56,7 +56,7 @@ const Dashboard = () => {
               <span className="text-white text-xl">💰</span>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Revenue</p>
+              <p className="text-sm font-medium text-gray-600">Tổng Doanh Thu</p>
               <p className="text-2xl font-bold text-gray-900">${stats.totalRevenue || 0}</p>
             </div>
           </div>
@@ -66,23 +66,23 @@ const Dashboard = () => {
       {/* Recent Orders */}
       <div className="bg-white rounded-lg shadow">
         <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-medium text-gray-900">Recent Orders</h2>
+          <h2 className="text-lg font-medium text-gray-900">Quản Lý Đơn Hàng Gần Đây</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Order ID
+                  Mã Đơn
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Customer
+                  Khách Hàng
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Total
+                  Tổng Tiền
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
+                  Trạng Thái
                 </th>
               </tr>
             </thead>

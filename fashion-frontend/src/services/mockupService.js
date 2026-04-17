@@ -5,10 +5,16 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 const mockupService = {
   /**
    * Get all available mockup templates
+   * @param {boolean} isActive - Filter by active status
+   * @param {number} [variantId] - Optional variant ID to filter templates
    */
-  getTemplates: (isActive = true) => {
+  getTemplates: (isActive = true, variantId = null) => {
+    const params = { active: isActive };
+    if (variantId) {
+      params.variant_id = variantId;
+    }
     return axios.get(`${API_BASE_URL}/mockups/templates`, {
-      params: { active: isActive },
+      params,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
@@ -35,6 +41,8 @@ const mockupService = {
    * @param {Object} [config.render_config] - Optional render configuration (colors, smart object IDs, etc)
    */
   renderMockup: (config) => {
+    console.log(config);
+    
     return axios.post(`${API_BASE_URL}/mockups/render`, config, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,

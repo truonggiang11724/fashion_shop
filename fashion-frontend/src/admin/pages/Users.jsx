@@ -22,20 +22,20 @@ const Users = () => {
   };
 
   const statusOptions = [
-    { value: 'active', label: 'Active' },
-    { value: 'inactive', label: 'Inactive' },
+    { value: 'active', label: 'Hoạt Động' },
+    { value: 'inactive', label: 'Vô Hiệu Lực' },
   ];
 
   const columns = [
-    { header: 'Username', key: 'username' },
+    { header: 'Tên Đăng Nhập', key: 'username' },
     { header: 'Email', key: 'email' },
     {
-      header: 'Role',
+      header: 'VẪi Trò',
       key: 'role',
       render: (row) => row.role || 'customer',
     },
     {
-      header: 'Status',
+      header: 'Trạng Thái',
       key: 'status',
       render: (row) => (
         <Select
@@ -47,7 +47,7 @@ const Users = () => {
       ),
     },
     {
-      header: 'Created',
+      header: 'Đế́ Thể Lập',
       key: 'created_at',
       render: (row) => new Date(row.created_at).toLocaleDateString(),
     },
@@ -55,7 +55,7 @@ const Users = () => {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Users</h1>
+      <h1 className="text-2xl font-bold text-gray-900">Quản Lý Người Dùng</h1>
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
@@ -67,7 +67,7 @@ const Users = () => {
         columns={columns}
         data={users}
         loading={loading}
-        emptyMessage="No users found"
+        emptyMessage="Không tìm thấy người dùng"
       />
 
       {/* Pagination */}
@@ -78,15 +78,15 @@ const Users = () => {
             disabled={page === 1}
             className="bg-gray-300 text-gray-700 hover:bg-gray-400 disabled:opacity-50"
           >
-            Previous
+            Quay Lại
           </Button>
-          <span className="px-4 py-2">Page {page} of {Math.ceil(total / limit)}</span>
+          <span className="px-4 py-2">Trang {page} của {Math.ceil(total / limit)}</span>
           <Button
             onClick={() => dispatch(setPage(page + 1))}
             disabled={page >= Math.ceil(total / limit)}
             className="bg-gray-300 text-gray-700 hover:bg-gray-400 disabled:opacity-50"
           >
-            Next
+            Tiếp theo
           </Button>
         </div>
       )}

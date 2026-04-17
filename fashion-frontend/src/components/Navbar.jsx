@@ -1,22 +1,22 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { getCart } from '../store/slices/cartSlice';
 
 export default function Navbar() {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = useMemo(() => JSON.parse(localStorage.getItem('user') || '{}'), []); 
   const cartCount = useSelector((state) => state.cart.user_cart.cart_items?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
     if (user) dispatch(getCart(user.user_id));
-  }, [dispatch, user?.user_id,  user]);
+  }, [dispatch, user]);
 
   return (
     <header className="bg-gray-50 border-b border-gray-200 sticky top-0 z-20">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}> 
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
           <div className="font-black text-2xl text-gray-900">TEEZONE</div>
           <span className="text-xs text-gray-500">Shop</span>
         </div>

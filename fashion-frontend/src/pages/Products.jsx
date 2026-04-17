@@ -56,7 +56,7 @@ export default function Products() {
         </select>
       </div>
 
-      {status === 'loading' && <LoadingSpinner message="Loading products..." />}
+      {status === 'loading' && <LoadingSpinner message="Đang tải sản phẩm..." />}
       {status === 'failed' && <p className="text-red-600">{error}</p>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

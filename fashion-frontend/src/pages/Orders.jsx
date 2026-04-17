@@ -12,7 +12,7 @@ export default function Orders() {
     dispatch(fetchOrders());
   }, [dispatch]);
 
-  if (status === 'loading') return <LoadingSpinner message="Loading orders..." />;
+  if (status === 'loading') return <LoadingSpinner message="Đang tải đơn hàng..." />;
 
   return (
     <main className="max-w-6xl mx-auto p-4 mt-6">
