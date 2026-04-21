@@ -6,6 +6,8 @@ const tokenFromStorage = localStorage.getItem('token') || null;
 export const getMe = createAsyncThunk('auth/getMe', async (_, { rejectWithValue }) => {
   try {
     const response = await api.get('/user/me');
+    console.log(response.data);
+    
     return response.data;
   } catch (err) {
     return rejectWithValue(err?.response?.data || { message: 'Fetch user failed' });

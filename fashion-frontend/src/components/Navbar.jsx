@@ -1,17 +1,32 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { getCart } from '../store/slices/cartSlice';
+import { getMe } from '../store/slices/userSlice';
 
 export default function Navbar() {
-  const user = useMemo(() => JSON.parse(localStorage.getItem('user') || '{}'), []); 
-  const cartCount = useSelector((state) => state.cart.user_cart.cart_items?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
+  // Get user and token from Redux store
+  const token = useSelector((state) => state.auth?.token);
+  const user = useSelector((state) => state.user?.user);
+  const cartCount = useSelector((state) => state.cart.user_cart.cart_items?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0);
+
+  // Fetch user data when component mounts or token changes
   useEffect(() => {
-    if (user) dispatch(getCart(user.user_id));
-  }, [dispatch, user]);
+    if (token && !user) {
+      dispatch(getMe());
+    }
+  }, [token, user, dispatch]);
+
+  // Get cart when user data is available
+  useEffect(() => {
+    if (user?.user_id) {
+      dispatch(getCart(user.user_id));
+    }
+  }, [user?.user_id, dispatch]);
 
   return (
     <header className="bg-gray-50 border-b border-gray-200 sticky top-0 z-20">

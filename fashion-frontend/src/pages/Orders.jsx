@@ -7,10 +7,14 @@ import LoadingSpinner from '../components/LoadingSpinner';
 export default function Orders() {
   const dispatch = useDispatch();
   const { list, status, error } = useSelector((state) => state.orders);
+  const user = useSelector((state) => state.user?.user);
 
+  // Fetch orders when user is authenticated
   useEffect(() => {
-    dispatch(fetchOrders());
-  }, [dispatch]);
+    if (user) {
+      dispatch(fetchOrders());
+    }
+  }, [user, dispatch]);
 
   if (status === 'loading') return <LoadingSpinner message="Đang tải đơn hàng..." />;
 
