@@ -41,7 +41,6 @@ export class AuthService {
 
     // Generate JWT token
     const token = this.generateToken(user);
-    console.log(user);
 
     await this.prisma.customers.create({
       data: {

@@ -2,15 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { VNPayService } from '../payments/vnpay.service';
 
 @Injectable()
 export class OrdersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private vnpayService: VNPayService,
+  ) {}
 
   async create(createOrderDto: CreateOrderDto) {
-    const { items, ...data } = createOrderDto;
+    const { items, payment_method, ...data } = createOrderDto;
 
-    return this.prisma.orders.create({
+    const order = await this.prisma.orders.create({
       data: {
         ...data,
         order_items: items ? { create: items } : undefined,
@@ -23,6 +27,31 @@ export class OrdersService {
         } 
       },
     });
+
+    if (payment_method === 'VNPAY') {
+      const paymentUrl = this.vnpayService.buildPaymentUrl({
+        vnp_Amount: Math.round(Number(order.total_amount || 0) * 100), // VNPay expects amount in smallest unit
+        vnp_OrderInfo: `Thanh toan don hang ${order.order_id}`,
+        vnp_OrderType: 'billpayment',
+        vnp_TxnRef: order.order_id.toString(),
+        vnp_IpAddr: '127.0.0.1', // Should get from request
+      });
+
+      // Create payment record
+      await this.prisma.payments.create({
+        data: {
+          order_id: order.order_id,
+          payment_method: 'VNPAY',
+          provider: 'VNPay',
+          amount: order.total_amount,
+          status: 'PENDING',
+        },
+      });
+
+      return { ...order, payment_url: paymentUrl };
+    }
+
+    return order;
   }
 
   async findAll(userId: number) {    

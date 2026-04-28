@@ -36,6 +36,11 @@ export class CreateOrderDto {
   @IsString()
   payment_status?: string;
 
+  @ApiPropertyOptional({ example: 'COD', description: 'Payment method' })
+  @IsOptional()
+  @IsString()
+  payment_method?: string;
+
   @ApiPropertyOptional({
     example: 129.99,
     description: 'Total amount for the order',

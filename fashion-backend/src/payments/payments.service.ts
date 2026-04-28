@@ -35,4 +35,14 @@ export class PaymentsService {
       where: { payment_id: paymentId },
     });
   }
+
+  async updatePaymentStatus(orderId: number, status: string, transactionCode?: string) {
+    return this.prisma.payments.updateMany({
+      where: { order_id: orderId },
+      data: {
+        status,
+        transaction_code: transactionCode,
+      },
+    });
+  }
 }
