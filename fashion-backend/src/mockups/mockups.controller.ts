@@ -128,8 +128,8 @@ export class MockupsController {
         value: {
           template_id: 1,
           design_image_url: '/uploads/design-1234.png',
-          product_variant_id: 10,
-          colors: ['#FF0000', '#FFFFFF'],
+          product_id: 6,
+          render_config: {"uuid": "19291d3a-619b-4c37-9fa9-4513342fda71","name": "Front Design","size": { "width": 672, "height": 610},"position": { "top": 50, "left": 50 }}
         },
       },
     },
