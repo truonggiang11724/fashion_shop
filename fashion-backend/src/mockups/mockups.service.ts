@@ -4,11 +4,14 @@ import { CreateMockupRenderDto } from './dto/create-mockup-render.dto';
 import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
+import FormData from 'form-data';
 
 @Injectable()
 export class MockupsService {
   private readonly SUDOMOCK_API_URL = 'https://api.sudomock.com/api/v1/renders';
   private readonly SUDOMOCK_API_KEY = process.env.SUDOMOCK_API_KEY;
+  private readonly REMOVE_BG_API_URL = 'https://api.remove.bg/v1.0/removebg';
+  private readonly REMOVE_BG_API_KEY = process.env.REMOVE_BG_API_KEY;
 
   constructor(private prisma: PrismaService) { }
 
@@ -47,6 +50,54 @@ export class MockupsService {
     }
 
     return template;
+  }
+
+  /**
+   * Remove background from design image using remove.bg API
+   */
+  private async removeBackground(imageUrl: string): Promise<string> {
+    if (!this.REMOVE_BG_API_KEY) {
+      throw new Error('Remove.bg API key not configured. Set REMOVE_BG_API_KEY environment variable.');
+    }
+
+    try {
+      // Download the image
+      const imageResponse = await axios.get(imageUrl, {
+        responseType: 'arraybuffer',
+        timeout: 10000,
+      });
+
+      // Prepare form data
+      const formData = new FormData();
+      formData.append('image_file', imageResponse.data, {
+        filename: 'design.png',
+        contentType: imageResponse.headers['content-type'] || 'image/png',
+      });
+      formData.append('size', 'auto');
+
+      // Call remove.bg API
+      const removeBgResponse = await axios.post(this.REMOVE_BG_API_URL, formData, {
+        headers: {
+          ...formData.getHeaders(),
+          'X-Api-Key': this.REMOVE_BG_API_KEY,
+        },
+        responseType: 'arraybuffer',
+        timeout: 30000,
+      });
+
+      // Save the processed image
+      const uniqueName = `bg-removed-${Date.now()}-${Math.round(Math.random() * 1e9)}.png`;
+      const filePath = path.join('./uploads', uniqueName);
+      fs.writeFileSync(filePath, removeBgResponse.data);
+
+      return `/uploads/${uniqueName}`;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.errors?.[0]?.title || error.message;
+        throw new Error(`Remove.bg API error: ${errorMessage}`);
+      }
+      throw error;
+    }
   }
 
   /**
@@ -101,13 +152,16 @@ export class MockupsService {
       throw new BadRequestException('Design image URL is not accessible');
     }
 
+    // Remove background from design image
+    const processedDesignUrl = await this.removeBackground(createMockupDto.design_image_url);
+
     // Create initial render record with pending status
     const renderRecord = await this.prisma.mockup_renders.create({
       data: {
         customer_id: userId,
         product_id: createMockupDto.product_id,
         template_id: createMockupDto.template_id,
-        design_image_url: createMockupDto.design_image_url,
+        design_image_url: processedDesignUrl,
         render_config: JSON.stringify(createMockupDto.render_config),
         status: 'processing',
       },
@@ -117,7 +171,7 @@ export class MockupsService {
       // Prepare smart objects for Sudomock API
       const smartObjects = this.prepareSmartObjects(
         template,
-        createMockupDto.design_image_url,
+        processedDesignUrl,
         createMockupDto.render_config,
       );
 

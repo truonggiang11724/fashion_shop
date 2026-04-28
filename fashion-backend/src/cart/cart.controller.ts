@@ -41,9 +41,8 @@ export class CartController {
       example1: {
         value: {
           customer_id: 1,
-          product_id: 5,
           variant_id: 10,
-          quantity: 2,
+          render_id: 1,
         },
       },
     },
