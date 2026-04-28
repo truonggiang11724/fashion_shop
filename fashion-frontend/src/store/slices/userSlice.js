@@ -5,9 +5,7 @@ const tokenFromStorage = localStorage.getItem('token') || null;
 
 export const getMe = createAsyncThunk('auth/getMe', async (_, { rejectWithValue }) => {
   try {
-    const response = await api.get('/user/me');
-    console.log(response.data);
-    
+    const response = await api.get('/user/me');    
     return response.data;
   } catch (err) {
     return rejectWithValue(err?.response?.data || { message: 'Fetch user failed' });
@@ -16,6 +14,8 @@ export const getMe = createAsyncThunk('auth/getMe', async (_, { rejectWithValue 
 
 export const updateProfile = createAsyncThunk('auth/updateProfile', async (payload, { rejectWithValue }) => {
   try {
+    console.log(payload);
+    
     const response = await api.put('/user/me', payload);
     return response.data;
   } catch (err) {
@@ -35,6 +35,7 @@ export const changePassword = createAsyncThunk('auth/changePassword', async (pay
 export const forgotPassword = createAsyncThunk('auth/forgotPassword', async (email, { rejectWithValue }) => {
   try {
     const response = await api.post('/user/forgotPassword', { email });
+    
     return response.data;
   } catch (err) {
     return rejectWithValue(err?.response?.data || { message: 'Forgot password request failed' });

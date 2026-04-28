@@ -18,6 +18,7 @@ import Profile from './pages/Profile';
 import ResetPassword from './pages/ResetPassword';
 import Orders from './pages/Orders';
 import OrderDetail from './pages/OrderDetail';
+import PaymentReturn from './pages/PaymentReturn';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminLogin from './admin/pages/AdminLogin';
 import Dashboard from './admin/pages/Dashboard';
@@ -79,6 +80,7 @@ export default function App() {
               <Footer />
             </>
           } />
+          <Route path="/payment-return" element={<PaymentReturn />} />
           <Route path="/login" element={
             <>
               <Navbar />

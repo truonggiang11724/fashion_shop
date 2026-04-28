@@ -16,7 +16,8 @@ export default function ProductDetail() {
   const user = JSON.parse(localStorage.getItem('user'));
   const [addForm, setAddForm] = useState({
     customer_id: user.user_id,
-    variant_id: 0
+    variant_id: 0,
+    render_id: null
   });
 
   // POD states
@@ -69,6 +70,7 @@ export default function ProductDetail() {
       alert("Chưa chọn màu/size");
       return;
     }
+    setAddForm(prev => ({ ...prev, render_id: renderId })); // Cập nhật render_id vào form
     const itemData = { ...addForm };
     if (renderId) {
       itemData.render_id = renderId;

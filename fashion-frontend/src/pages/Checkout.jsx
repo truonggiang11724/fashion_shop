@@ -31,6 +31,7 @@ export default function Checkout() {
     address_detail: '',
     is_default: false,
   });
+  const [paymentMethod, setPaymentMethod] = useState('COD');
 
   const total = useMemo(() => user_cart?.cart_items?.reduce((sum, item) => sum + (item.quantity || 0) * Number(item.product_variants.price || 0), 0), [user_cart.cart_items]);
   const discount = promo === 'SAVE10' ? 0.1 : 0;
@@ -119,27 +120,34 @@ export default function Checkout() {
     setError(null);
 
     try {
-      await dispatch(placeOrder({
+      const orderData = {
         customer_id: user?.user_id,
         address_id: selectedAddress.address_id,
         order_status: 'PENDING',
-        payment_status: 'UNPAID',
+        payment_status: paymentMethod === 'COD' ? 'UNPAID' : 'PENDING',
         total_amount: Number(grandTotal),
+        payment_method: paymentMethod,
         items: user_cart?.cart_items?.map((item) => {
           const orderItem = {
             variant_id: item.product_variants.variant_id,
             quantity: item.quantity,
-            unit_price: Number(item.product_variants.price)
+            unit_price: Number(item.product_variants.price),
+            render_id: item.render_id
           };
           if (item.render_id) {
             orderItem.render_id = item.render_id;
           }
           return orderItem;
         }),
-      })).unwrap();
-      dispatch(removeAllCartItem(user_cart.cart_id));
-      setStatus('succeeded');
-      setTimeout(() => navigate('/orders'), 1200);
+      };
+      const response = await dispatch(placeOrder(orderData)).unwrap();
+      if (paymentMethod === 'VNPAY' && response.payment_url) {
+        window.location.href = response.payment_url;
+      } else {
+        dispatch(removeAllCartItem(user_cart.cart_id));
+        setStatus('succeeded');
+        setTimeout(() => navigate('/orders'), 1200);
+      }
     } catch (err) {
       setError(err?.message || 'Thanh toán thất bại');
       setStatus('failed');
@@ -315,6 +323,34 @@ export default function Checkout() {
         <div>
           <label className="block text-sm font-medium text-gray-700">Mã giảm giá</label>
           <input value={promo} onChange={(e) => setPromo(e.target.value)} placeholder="SAVE10" className="mt-1 w-full border border-gray-300 rounded p-2 bg-white text-gray-700 focus:border-gray-500 focus:outline-none" />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Phương thức thanh toán</label>
+          <div className="space-y-2">
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="COD"
+                checked={paymentMethod === 'COD'}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                className="mr-2"
+              />
+              Thanh toán khi nhận hàng (COD)
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="VNPAY"
+                checked={paymentMethod === 'VNPAY'}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                className="mr-2"
+              />
+              Thanh toán online qua VNPay
+            </label>
+          </div>
         </div>
 
         <div className="flex justify-between text-lg font-semibold">

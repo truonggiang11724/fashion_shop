@@ -7,9 +7,7 @@ import api from '../services/api';
 export default function Profile() {
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.user);
-  const user = useMemo(() => JSON.parse(localStorage.getItem('user') || '{}'), []);
-  console.log(user);
-  
+  const user = useMemo(() => JSON.parse(localStorage.getItem('user') || '{}'), []);  
   
   // Edit Profile Form
   const [formData, setFormData] = useState({

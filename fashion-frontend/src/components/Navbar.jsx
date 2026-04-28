@@ -11,15 +11,15 @@ export default function Navbar() {
   
   // Get user and token from Redux store
   const token = useSelector((state) => state.auth?.token);
-  const user = useSelector((state) => state.user?.user);
   const cartCount = useSelector((state) => state.cart.user_cart.cart_items?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0);
-
+  let user = useSelector((state) => state.user?.user);
+  
   // Fetch user data when component mounts or token changes
   useEffect(() => {
     if (token && !user) {
       dispatch(getMe());
     }
-  }, [token, user, dispatch]);
+  }, [token, dispatch]);
 
   // Get cart when user data is available
   useEffect(() => {
