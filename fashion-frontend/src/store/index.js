@@ -10,6 +10,8 @@ import userAdminReducer from './slices/userAdminSlice';
 import dashboardReducer from './slices/dashboardSlice';
 import userReducer from './slices/userSlice';
 import sellerReducer from './slices/sellerSlice';
+import refundReducer from './slices/refundSlice';
+import reviewReducer from './slices/reviewSlice';
 
 export const store = configureStore({
   reducer: {
@@ -24,5 +26,7 @@ export const store = configureStore({
     dashboard: dashboardReducer,
     user: userReducer,
     seller: sellerReducer,
+    refunds: refundReducer,
+    reviews: reviewReducer,
   },
 });

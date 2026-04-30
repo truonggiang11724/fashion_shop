@@ -19,6 +19,15 @@ export const fetchOrderById = createAsyncThunk('orders/fetchOrderById', async (i
   }
 });
 
+export const receiveOrder = createAsyncThunk('orders/receiveOrder', async (id, { rejectWithValue }) => {
+  try {
+    const response = await api.put(`/orders/${id}/receive`);
+    return response.data;
+  } catch (err) {
+    return rejectWithValue(err?.response?.data || { message: 'Cannot receive order' });
+  }
+});
+
 export const placeOrder = createAsyncThunk('orders/placeOrder', async (payload, { rejectWithValue }) => {
   try {
     const response = await api.post('/orders', payload);
@@ -66,6 +75,17 @@ const orderSlice = createSlice({
         state.detail = action.payload;
       })
       .addCase(fetchOrderById.rejected, (state, action) => {
+        state.detailStatus = 'failed';
+        state.detailError = action.payload?.message;
+      })
+      .addCase(receiveOrder.pending, (state) => {
+        state.detailStatus = 'loading';
+      })
+      .addCase(receiveOrder.fulfilled, (state, action) => {
+        state.detailStatus = 'succeeded';
+        state.detail = action.payload;
+      })
+      .addCase(receiveOrder.rejected, (state, action) => {
         state.detailStatus = 'failed';
         state.detailError = action.payload?.message;
       })

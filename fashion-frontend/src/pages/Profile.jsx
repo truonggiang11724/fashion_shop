@@ -160,7 +160,7 @@ export default function Profile() {
             <h2 className="text-lg font-semibold mb-4">Avatar</h2>
             <div className="flex flex-col items-center">
               <img
-                src={formData.avatar_url || '/default-avatar.png'}
+                src={`http://localhost:3000${formData.avatar_url}` || '/default-avatar.png'}
                 alt="User Avatar"
                 className="w-32 h-32 rounded-full object-cover mb-4 border border-gray-300"
               />
